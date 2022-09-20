@@ -1,0 +1,3 @@
+from PreparaAmbiente import *
+
+PreparaAmbiente('123456')
