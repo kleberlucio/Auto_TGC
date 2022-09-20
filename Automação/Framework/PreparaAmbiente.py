@@ -3,8 +3,9 @@ import psutil
 import patoolib
 import glob
 import time
+import pyautogui
 
-def PreparaAmbiente(Redmine):
+def PreparaAmbiente(Redmine,IniciaIntegrador):
 
     #Colhendo dados sobre o serviço do Firebird para testes
     service = psutil.win_service_get('FirebirdServerTGCTRON')
@@ -18,7 +19,7 @@ def PreparaAmbiente(Redmine):
     service = psutil.win_service_get('FirebirdServerTGCTRON')
     service = service.as_dict()
 
-    #PONTO DE PARADA. Caso o serviço ainda esteja rodando, tenho que parar a execução da função
+    #Verificando, caso o serviço ainda esteja rodando, tenho que parar a execução da função
     if (service and service['status'] == 'running'):
         return
         #Criar LOG de erro aqui
@@ -187,3 +188,45 @@ def PreparaAmbiente(Redmine):
     if DeuLog:
         return
         #Criar LOG de erro aqui
+    
+    #Encerrando o módulo da Folha
+    os.system('taskkill /IM Folha.exe /F')
+
+    #Verificando se o módulo está aberto. Caso contrário, tenho que parar a execução da função
+    FolhaEstaRodando = False
+    for p in psutil.process_iter(attrs=['pid', 'name']):
+        if p.info['name'] == "Folha.exe":
+            FolhaEstaRodando = True
+            break
+    if not FolhaEstaRodando:
+        return
+        #Criar LOG de erro aqui
+
+    #Iniciando o processo do Tron Integrador
+    if IniciaIntegrador:
+        #Chamando o Tron Integrador
+        os.startfile("C:\Program Files (x86)\Tron\TronIntegrador\Tron.Integrador.exe")
+
+        #Aguardando a abertura do Integrador
+        time.sleep(2)
+
+        #Pressionando Enter na mensagem apresentada
+        pyautogui.press('enter')
+
+        #Abrindo o menu configurações
+        pyautogui.hotkey('alt','c')
+
+        #Ativando o integrador, precionando a sequencia de teclas abaixo.
+        pyautogui.press(['a','s','enter','s','esc'])
+
+        #Iniciando o Firebird
+        os.system('net start TronIntegradorSvc')
+
+        #Colhendo dados sobre o serviço do Firebird para testes
+        service = psutil.win_service_get('TronIntegradorSvc')
+        service = service.as_dict()
+
+        #Verificando, caso o serviço não esteja rodando, tenho que parar a execução da função
+        if not (service and service['status'] == 'running'):
+            return
+            #Criar LOG de erro aqui     

@@ -1,52 +1,23 @@
-from operator import truediv
 import os
-import psutil
 import time
-import glob
+import pyautogui
+import psutil
 
+#Chamando o Tron Integrador
+os.startfile("C:\Program Files (x86)\Tron\TronIntegrador\Tron.Integrador.exe")
 
+time.sleep(2)
 
-#Chamando o MenuTron
-os.startfile("C:\Program Files (x86)\Tron\Folha\Folha.exe")
+#Pressionando Enter na mensagem apresentada
+pyautogui.press('enter')
 
-time.sleep(10)
+pyautogui.hotkey('alt','c')
 
-FolhaEstaRodando = False
+pyautogui.press(['a','s','enter','s','esc'])
 
-#PONTO DE PARADA. Conferindo se a folha abriu. 
-for p in psutil.process_iter(attrs=['pid', 'name']):
-    if p.info['name'] == "Folha.exe":
-        FolhaEstaRodando = True
-        break
+#Iniciando o Firebird
+os.system('net start TronIntegradorSvc')
 
-if not FolhaEstaRodando:
-    print("A Folha não está em execução")
-
-TempoLimite = 0
-DeuLog = False
-while os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.ban"):
-    time.sleep(1)
-    TempoLimite = TempoLimite + 1
-    if TempoLimite > 600:
-        # PONTO DE PARADA, estourou mais de 10 minutos para estruturar ou ocorreu erro
-        print("Gastou mais de 10 minuto para estruturar o banco")
-        break
-    #Verificando se tem XML na pasta TRON. Se tiver, deu LOG na restruturação
-    fileList = glob.glob('C:/Program Files (x86)/tron/*.xml')
-    for filePath in fileList:
-        DeuLog = True
-        break
-
-
-FolhaEstaRodando = False
-
-
-
-
-
-for p in psutil.process_iter(attrs=['pid', 'name']):
-    if p.info['name'] == "Folha.exe":
-        FolhaEstaRodando = True
-
-if FolhaEstaRodando:
-    print('A Folha não foi encerrada')
+#Colhendo dados sobre o serviço do Firebird para testes
+service = psutil.win_service_get('TronIntegradorSvc')
+service = service.as_dict()
