@@ -220,6 +220,7 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
 
     #Iniciando o processo do Tron Integrador
     if IniciaIntegrador:
+        
         #Chamando o Tron Integrador
         os.startfile("C:\Program Files (x86)\Tron\TronIntegrador\Tron.Integrador.exe")
 
@@ -246,4 +247,5 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
         if not (service and service['status'] == 'running'):
             GeraLog(False,"Ocorreu falha ao iniciar o Tron Integrador")
             return
+
     GeraLog(False,"Preparação do Ambiente finalizada")
