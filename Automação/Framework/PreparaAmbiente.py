@@ -192,13 +192,16 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
     #Encerrando o módulo da Folha
     os.system('taskkill /IM Folha.exe /F')
 
+    #Aguardando o processo ser fechado definitivamente
+    time.sleep(3)
+
     #Verificando se o módulo está aberto. Caso contrário, tenho que parar a execução da função
     FolhaEstaRodando = False
     for p in psutil.process_iter(attrs=['pid', 'name']):
         if p.info['name'] == "Folha.exe":
             FolhaEstaRodando = True
             break
-    if not FolhaEstaRodando:
+    if  FolhaEstaRodando:
         return
         #Criar LOG de erro aqui
 
