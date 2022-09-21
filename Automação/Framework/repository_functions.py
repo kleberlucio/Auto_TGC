@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import psutil
 import patoolib
@@ -5,7 +6,18 @@ import glob
 import time
 import pyautogui
 
+def GeraLog(IniciaLog, TextoDoLog):
+    now = datetime.now()
+    if IniciaLog:
+        f = open("c:\Bancos\LogAuto.txt","w+")
+    f=open("c:\Bancos\LogAuto.txt", "a+")
+    f.write(now.strftime("%d/%m/%Y, %H:%M:%S") + " - " + TextoDoLog + '\n')
+    f.close()
+
 def PreparaAmbiente(Redmine,IniciaIntegrador):
+
+    #Carregando o arquivo de log
+    GeraLog(True,"Iniciando a preparação do ambiente para testar a tarefa " + Redmine)
 
     #Colhendo dados sobre o serviço do Firebird para testes
     service = psutil.win_service_get('FirebirdServerTGCTRON')
@@ -21,8 +33,8 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
 
     #Verificando, caso o serviço ainda esteja rodando, tenho que parar a execução da função
     if (service and service['status'] == 'running'):
-        return
-        #Criar LOG de erro aqui
+        GeraLog(False,"Não foi possível parar o serviço do Firebird")
+        return        
 
     #Colhendo dados sobre o serviço do Tron Integrador para testes
     service = psutil.win_service_get('TronIntegradorSvc')
@@ -36,10 +48,10 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
     service = psutil.win_service_get('TronIntegradorSvc')
     service = service.as_dict()
 
-    #PONTO DE PARADA. Caso o serviço ainda esteja rodando, tenho que parar a execução da função
+    #Caso o serviço ainda esteja rodando, tenho que parar a execução da função
     if (service and service['status'] == 'running'):
+        GeraLog(False,"Não foi possível parar o serviço do Tron Integrador")
         return
-        #Criar LOG de erro aqui
 
     #Excluindo relatórios gerados pelo sistema
     if os.path.exists("C:\\Users\\Public\\Documents\\Report.pdf"):
@@ -47,8 +59,8 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
 
     #Verificando se o arquivo foi de fato excluido. Caso contrário, tenho que parar a execução da função
     if os.path.exists("C:\\Users\\Public\\Documents\\Report.pdf"):
+        GeraLog(False,"Não foi possível excluir o arquivo Report.pdf")
         return
-        #Criar LOG de erro aqui
 
     #Excluindo relatórios gerados pelo sistema
     if os.path.exists("C:\\Users\\Public\\Documents\\Report.prn"):
@@ -56,8 +68,8 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
 
     #Verificando se o arquivo foi de fato excluido. Caso contrário, tenho que parar a execução da função
     if os.path.exists("C:\\Users\\Public\\Documents\\Report.prn"):
+        GeraLog(False,"Não foi possível excluir o arquivo Report.prn")
         return
-        #Criar LOG de erro aqui
 
     #Excluindo arquivos XML utilizados anteriormente
     fileList = glob.glob('C:/Bancos/*.xml')
@@ -70,8 +82,8 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
     for filePath in fileList:
         TemXML = True
     if TemXML:
+        GeraLog(False,"Não foi possível excluir todos os XML utilizados anteriormente")
         return
-        #Criar LOG de erro aqui
 
     #Excluindo arquivos TXT utilizados anteriormente
     fileList = glob.glob('C:/Bancos/*.txt')
@@ -84,8 +96,8 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
     for filePath in fileList:
         TemTXT = True
     if TemTXT:
+        GeraLog(False,"Não foi possível excluir todos os TXT utilizados anteriormente")
         return
-        #Criar LOG de erro aqui
 
     #Excluindo o banco utilizando anteriormente
     if os.path.exists("C:\\Bancos\\troncg.idb"):
@@ -93,13 +105,13 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
 
     #Verificando se o arquivo foi de fato excluido. Caso contrário, tenho que parar a execução da função
     if os.path.exists("C:\\Bancos\\troncg.idb"):
+        GeraLog(False,"Não foi possível excluir o TRONCG.IDB")
         return
-        #Criar LOG de erro aqui
 
     #Verificando se existe o arquivo de banco compactado. Caso contrário, tenho que parar a execução da função
     if not os.path.exists("C:\\Bancos\\" + Redmine + "\\Banco.rar"):
+        GeraLog(False,"Não existe o arquivo BANCO.RAR")
         return
-        #Criar LOG de erro aqui
 
     #Extrai o arquivo compactado na pasta bancos
     if os.path.exists("C:\\Bancos\\" + Redmine + "\\Banco.rar"):
@@ -107,8 +119,8 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
 
     #Verificando se existe o arquivo de banco descompactado. Caso contrário, tenho que parar a execução da função
     if not os.path.exists("C:\\Bancos\\troncg.idb"):
+        GeraLog(False,"Não o arquivo TRONCG.IDB após a descompactação")
         return
-        #Criar LOG de erro aqui
 
     #Extrai arquivos de importação
     if os.path.exists("C:\\Bancos\\" + Redmine + "\\Arquivos.rar"):
@@ -134,13 +146,13 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
 
     #Verificando se existe o Atualiza.bin. Caso contrário, tenho que parar a execução da função
     if not os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.bin"):
+        GeraLog(False,"Ocorreu falha ao renomear o Atualiza.bin")
         return
-        #Criar LOG de erro aqui
 
     #Verificando se existe o Atualiza.ban. Caso contrário, tenho que parar a execução da função
     if not os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.ban"):
+        GeraLog(False,"Ocorreu falha ao renomear o Atualiza.ban")        
         return
-        #Criar LOG de erro aqui
 
     #Iniciando o Firebird
     os.system('net start FirebirdServerTGCTRON')
@@ -151,8 +163,8 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
 
     #Verificando se o serviço do Firebird foi iniciado. Caso contrário, tenho que parar a execução da função
     if not (service and service['status'] == 'running'):
+        GeraLog(False,"Ocorreu falha ao tentar iniciar o Firebird")
         return
-        #Criar LOG de erro aqui
 
     #Chamando o módulo de Folha de Pagamento
     os.startfile("C:\Program Files (x86)\Tron\Folha\Folha.exe")
@@ -167,7 +179,8 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
             FolhaEstaRodando = True
             break
     if not FolhaEstaRodando:
-        print("A Folha não está em execução")
+        GeraLog(False,"O processo da Folha.exe não está em execução")
+        return
 
     #Restruturando o banco. O tempo limite de espera será de 10 minutos
     #Caso tenha arquivo XML na pasta TRON, deu LOG de banco
@@ -183,11 +196,11 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
             DeuLog = True
             break
     if TempoLimite > 600:
+        GeraLog(False,"A estruturação do banco levou mais de 10 minutos.")
         return
-        #Criar LOG de erro aqui
+
     if DeuLog:
-        return
-        #Criar LOG de erro aqui
+        GeraLog(False,"Ocorreu LOG de banco após a restruturação. Acionar DBA.")
     
     #Encerrando o módulo da Folha
     os.system('taskkill /IM Folha.exe /F')
@@ -202,8 +215,8 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
             FolhaEstaRodando = True
             break
     if  FolhaEstaRodando:
+        GeraLog(False,"O processo Folha.exe ainda está rodando")
         return
-        #Criar LOG de erro aqui
 
     #Iniciando o processo do Tron Integrador
     if IniciaIntegrador:
@@ -231,5 +244,6 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
 
         #Verificando, caso o serviço não esteja rodando, tenho que parar a execução da função
         if not (service and service['status'] == 'running'):
+            GeraLog(False,"Ocorreu falha ao iniciar o Tron Integrador")
             return
-            #Criar LOG de erro aqui     
+    GeraLog(False,"Preparação do Ambiente finalizada")
