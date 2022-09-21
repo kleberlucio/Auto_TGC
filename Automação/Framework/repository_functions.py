@@ -14,7 +14,7 @@ def GeraLog(IniciaLog, TextoDoLog):
     f.write(now.strftime("%d/%m/%Y, %H:%M:%S") + " - " + TextoDoLog + '\n')
     f.close()
 
-def PreparaAmbiente(Redmine,IniciaIntegrador):
+def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
 
     #Carregando o arquivo de log
     GeraLog(True,"Iniciando a preparação do ambiente para testar a tarefa " + Redmine)
@@ -166,20 +166,20 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
         GeraLog(False,"Ocorreu falha ao tentar iniciar o Firebird")
         return
 
-    #Chamando o módulo de Folha de Pagamento
-    os.startfile("C:\Program Files (x86)\Tron\Folha\Folha.exe")
+    #Chamando o módulo TGC
+    os.startfile("C:\Program Files (x86)\Tron" + ModuloSis + ModuloSis + ".exe")
 
     #Aguardando a abertura do módulo
     time.sleep(10)
 
     #Verificando se o módulo está aberto. Caso contrário, tenho que parar a execução da função
-    FolhaEstaRodando = False
+    ModuloEstaRodando = False
     for p in psutil.process_iter(attrs=['pid', 'name']):
-        if p.info['name'] == "Folha.exe":
-            FolhaEstaRodando = True
+        if p.info['name'] == (ModuloSis[1:] + ".exe"):
+            ModuloEstaRodando = True
             break
-    if not FolhaEstaRodando:
-        GeraLog(False,"O processo da Folha.exe não está em execução")
+    if not ModuloEstaRodando:
+        GeraLog(False,"O processo do módulo " + ModuloSis[1:] + ".exe não está em execução")
         return
 
     #Restruturando o banco. O tempo limite de espera será de 10 minutos
@@ -202,25 +202,25 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
     if DeuLog:
         GeraLog(False,"Ocorreu LOG de banco após a restruturação. Acionar DBA.")
     
-    #Encerrando o módulo da Folha
-    os.system('taskkill /IM Folha.exe /F')
+    #Encerrando o módulo
+    os.system('taskkill /IM ' + ModuloSis[1:] + '.exe /F')
 
     #Aguardando o processo ser fechado definitivamente
     time.sleep(3)
 
     #Verificando se o módulo está aberto. Caso contrário, tenho que parar a execução da função
-    FolhaEstaRodando = False
+    ModuloEstaRodando = False
     for p in psutil.process_iter(attrs=['pid', 'name']):
-        if p.info['name'] == "Folha.exe":
-            FolhaEstaRodando = True
+        if p.info['name'] == (ModuloSis[1:] + ".exe"):
+            ModuloEstaRodando = True
             break
-    if  FolhaEstaRodando:
-        GeraLog(False,"O processo Folha.exe ainda está rodando")
+    if  ModuloEstaRodando:
+        GeraLog(False,"O processo " + ModuloSis[1:] + ".exe ainda está rodando")
         return
 
     #Iniciando o processo do Tron Integrador
     if IniciaIntegrador:
-        
+
         #Chamando o Tron Integrador
         os.startfile("C:\Program Files (x86)\Tron\TronIntegrador\Tron.Integrador.exe")
 
@@ -249,3 +249,8 @@ def PreparaAmbiente(Redmine,IniciaIntegrador):
             return
 
     GeraLog(False,"Preparação do Ambiente finalizada")
+
+    #Chamando o módulo TGC
+    os.startfile("C:\Program Files (x86)\Tron" + ModuloSis + ModuloSis + ".exe")
+
+    time.sleep(15)
