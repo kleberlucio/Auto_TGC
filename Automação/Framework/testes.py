@@ -1,9 +1,5 @@
-from dataclasses import replace
-import os
-import time
-
-ModuloSis = "\Folha"
-
-print(ModuloSis[1:]+".exe")
+from datetime import date
 
 
+from datetime import datetime
+print(datetime.now().month)
