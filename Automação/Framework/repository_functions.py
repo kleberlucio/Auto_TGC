@@ -22,6 +22,31 @@ def SelecionaEmpresa(CodigoEmpresa):
     #Volta para o diretório atual.
     os.chdir(DirAtu)
 
+def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano):    
+    #Diretório atual
+    DirAtu = os.getcwd()
+    #Diretório onde está a imagem a ser pesquisada
+    DirImg = "C:\GitHub\Auto_TGC\Automação\Framework\img"
+    #Acessa diretório da imagem
+    os.chdir(DirImg)
+    VoltaAno = AnoCriacaoScript - Ano
+    while VoltaAno > 0:
+        pyautogui.click( pyautogui.locateCenterOnScreen('VoltaAno.png', grayscale=True, confidence=0.9) )
+        VoltaAno = VoltaAno - 1
+    #Pesquisa a imagem no menu principal e clica no campo
+    Meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"]
+    Cont = 0
+    for QualMes in Meses:
+        Cont = Cont + 1
+        if Cont == Mes:
+            if datetime.now().month == Mes:
+                pyautogui.doubleClick( pyautogui.locateCenterOnScreen(QualMes+'2.png', grayscale=True, confidence=0.9) )
+            else:
+                pyautogui.doubleClick( pyautogui.locateCenterOnScreen(QualMes+'1.png', grayscale=True, confidence=0.9) )
+            break
+    #Volta para o diretório atual.
+    os.chdir(DirAtu)
+
 def GeraLog(IniciaLog, TextoDoLog):
     now = datetime.now()
     if IniciaLog:
