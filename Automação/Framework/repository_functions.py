@@ -5,6 +5,7 @@ import patoolib
 import glob
 import time
 import pyautogui
+import logging
 
 def SelecionaEmpresa(CodigoEmpresa):
     #Diretório atual
@@ -14,7 +15,7 @@ def SelecionaEmpresa(CodigoEmpresa):
     #Acessa diretório da imagem
     os.chdir(DirImg)
     #Pesquisa a imagem no menu principal e clica no campo
-    pyautogui.click( pyautogui.locateCenterOnScreen('SelecaoEmpresa.png', grayscale=True, confidence=0.9) )
+    pyautogui.click( pyautogui.locateCenterOnScreen('SelecaoEmpresa.png', confidence=0.9) )
     #Escreve o código da empresa
     pyautogui.typewrite(CodigoEmpresa)
     #Tecla enter
@@ -29,31 +30,39 @@ def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano):
     DirImg = "C:\GitHub\Auto_TGC\Automação\Framework\img"
     #Acessa diretório da imagem
     os.chdir(DirImg)
-    VoltaAno = AnoCriacaoScript - Ano
+    #Rotina para clicar no Ano a ser selecionado
+    VoltaAno = ( (AnoCriacaoScript - Ano) + 1 )
+    if VoltaAno == 1:
+        VoltaAno = 0
     while VoltaAno > 0:
-        pyautogui.click( pyautogui.locateCenterOnScreen('VoltaAno.png', grayscale=True, confidence=0.9) )
+        pyautogui.click( pyautogui.locateCenterOnScreen('VoltaAno.png', confidence=0.9) )
         VoltaAno = VoltaAno - 1
-    #Pesquisa a imagem no menu principal e clica no campo
+    #Rotina para clicar no Mês a ser selecionado
     Meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"]
     Cont = 0
     for QualMes in Meses:
         Cont = Cont + 1
         if Cont == Mes:
             if datetime.now().month == Mes:
-                pyautogui.doubleClick( pyautogui.locateCenterOnScreen(QualMes+'2.png', grayscale=True, confidence=0.9) )
+                pyautogui.doubleClick( pyautogui.locateCenterOnScreen(QualMes+'2.png', confidence=0.9) )
             else:
-                pyautogui.doubleClick( pyautogui.locateCenterOnScreen(QualMes+'1.png', grayscale=True, confidence=0.9) )
+                pyautogui.doubleClick( pyautogui.locateCenterOnScreen(QualMes+'1.png', confidence=0.9) )
             break
     #Volta para o diretório atual.
     os.chdir(DirAtu)
 
-def GeraLog(IniciaLog, TextoDoLog):
-    now = datetime.now()
-    if IniciaLog:
-        f = open("c:\Bancos\LogAuto.txt","w+")
-    f=open("c:\Bancos\LogAuto.txt", "a+")
-    f.write(now.strftime("%d/%m/%Y, %H:%M:%S") + " - " + TextoDoLog + '\n')
-    f.close()
+def GeraLog(apagarDadosLog, TextoDoLog):
+            
+    if (not os.path.exists("C:\\GitHub\\Auto_TGC\\Automação\\Framework\\LogAuto.txt")) or (apagarDadosLog==True): # se o arquivo não existir, ele cria um novo. Ou para limpar os arquivos. 
+        f = open("C:\\GitHub\\Auto_TGC\\Automação\\Framework\\LogAuto.txt", "w")
+        f.write("Inicio do Log\n\n") 
+    
+    logging.basicConfig(filename='C:\\GitHub\\Auto_TGC\\Automação\\Framework\\LogAuto.txt', 
+                        filemode='a',
+                        level=logging.DEBUG) # configuração inicial
+ 
+    now = datetime.now() #pega a data atual           
+    logging.warning(now.strftime("%d/%m/%Y, %H:%M:%S" + " - " + TextoDoLog)) # escreve no log
 
 def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
 
