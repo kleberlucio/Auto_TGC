@@ -7,11 +7,34 @@ import time
 import pyautogui
 import logging
 
+def ComparaArquivo(Arq1,Arq2,ArqDif):
+    flog = open(ArqDif, "w")
+    f1 = open(Arq1, "r")  
+    f2 = open(Arq2, "r")          
+    i = 0
+    TemDif = False
+    for line1 in f1:
+        i += 1
+        for line2 in f2:
+            if line1 == line2:
+                break
+            else:
+                TemDif = True
+                flog.write('Diferença na linha ' + str(i) + ':\n')
+                flog.write('Antes  : ' + line1)
+                flog.write('Depois: ' + line2)
+                break
+    f1.close()                                       
+    f2.close()
+    flog.close()
+    if TemDif:
+       GeraLog(False,"O arquivo está diferente. Favor consultar " + ArqDif)
+
 def SelecionaEmpresa(CodigoEmpresa):
     #Diretório atual
     DirAtu = os.getcwd()
     #Diretório onde está a imagem a ser pesquisada
-    DirImg = "C:\GitHub\Auto_TGC\Automação\Framework\img"
+    DirImg = "C:\GitHub\Auto_TGC\Automacao\Framework\img"
     #Acessa diretório da imagem
     os.chdir(DirImg)
     #Pesquisa a imagem no menu principal e clica no campo
@@ -27,7 +50,7 @@ def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano):
     #Diretório atual
     DirAtu = os.getcwd()
     #Diretório onde está a imagem a ser pesquisada
-    DirImg = "C:\GitHub\Auto_TGC\Automação\Framework\img"
+    DirImg = "C:\GitHub\Auto_TGC\Automacao\Framework\img"
     #Acessa diretório da imagem
     os.chdir(DirImg)
     #Rotina para clicar no Ano a ser selecionado
@@ -52,12 +75,11 @@ def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano):
     os.chdir(DirAtu)
 
 def GeraLog(apagarDadosLog, TextoDoLog):
-            
-    if (not os.path.exists("C:\\GitHub\\Auto_TGC\\Automação\\Framework\\LogAuto.txt")) or (apagarDadosLog==True): # se o arquivo não existir, ele cria um novo. Ou para limpar os arquivos. 
-        f = open("C:\\GitHub\\Auto_TGC\\Automação\\Framework\\LogAuto.txt", "w")
+    if (not os.path.exists("C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\LogAuto.txt")) or (apagarDadosLog==True): # se o arquivo não existir, ele cria um novo. Ou para limpar os arquivos. 
+        f = open("C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\LogAuto.txt", "w")
         f.write("Inicio do Log\n\n") 
     
-    logging.basicConfig(filename='C:\\GitHub\\Auto_TGC\\Automação\\Framework\\LogAuto.txt', 
+    logging.basicConfig(filename='C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\LogAuto.txt', 
                         filemode='a',
                         level=logging.DEBUG) # configuração inicial
  
@@ -65,9 +87,17 @@ def GeraLog(apagarDadosLog, TextoDoLog):
     logging.warning(now.strftime("%d/%m/%Y, %H:%M:%S" + " - " + TextoDoLog)) # escreve no log
 
 def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
-
     #Carregando o arquivo de log
     GeraLog(True,"Iniciando a preparação do ambiente para testar a tarefa " + Redmine)
+
+    #Verificando se o módulo está aberto, para poder fechá-lo
+    ModuloEstaRodando = False
+    for p in psutil.process_iter(attrs=['pid', 'name']):
+        if p.info['name'] == (ModuloSis[1:] + ".exe"):
+           ModuloEstaRodando = True
+           break
+    if  ModuloEstaRodando:
+        os.system('taskkill /IM ' + ModuloSis[1:] + '.exe /F')
 
     #Colhendo dados sobre o serviço do Firebird para testes
     service = psutil.win_service_get('FirebirdServerTGCTRON')
@@ -239,7 +269,7 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
     while os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.ban"):
         time.sleep(1)
         TempoLimite = TempoLimite + 1
-        if TempoLimite > 600:
+        if TempoLimite > 600 or DeuLog:
             break          
         fileList = glob.glob('C:/Program Files (x86)/tron/*.xml')
         for filePath in fileList:
@@ -286,7 +316,7 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
         #Ativando o integrador, precionando a sequencia de teclas abaixo.
         pyautogui.press(['a','s','enter','s','esc'])
 
-        #Iniciando o Firebird
+        #Iniciando o Tron Integrador
         os.system('net start TronIntegradorSvc')
 
         #Colhendo dados sobre o serviço do Firebird para testes
@@ -303,4 +333,4 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
     #Chamando o módulo TGC
     os.startfile("C:\Program Files (x86)\Tron" + ModuloSis + ModuloSis + ".exe")
 
-    time.sleep(15)
+    time.sleep(10)

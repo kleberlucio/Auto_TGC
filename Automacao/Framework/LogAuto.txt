@@ -1,0 +1,4 @@
+Inicio do Log
+
+9/2022, 14:22:22 - Iniciando a preparação do ambiente para testar a tarefa 108805
+WARNING:root:26/09/2022, 14:22:48 - Preparação do Ambiente finalizada
