@@ -1,4 +1,7 @@
 Inicio do Log
 
-9/2022, 14:22:22 - Iniciando a preparação do ambiente para testar a tarefa 108805
-WARNING:root:26/09/2022, 14:22:48 - Preparação do Ambiente finalizada
+9/2022, 08:58:24 - Iniciando a preparação do ambiente para testar a tarefa 108805
+WARNING:root:27/09/2022, 08:58:54 - Preparação do Ambiente finalizada
+WARNING:root:27/09/2022, 09:27:54 - O arquivo está diferente. Favor consultar C:\GitHub\Auto_TGC\Automacao\Framework\Diferente.txt
+WARNING:root:27/09/2022, 11:07:02 - Iniciando a preparação do ambiente para testar a tarefa 108805
+WARNING:root:27/09/2022, 11:07:08 - Não existe o arquivo BANCO.RAR

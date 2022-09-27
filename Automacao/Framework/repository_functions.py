@@ -1,3 +1,8 @@
+"""
+Pacotes que devem ser instalados, além dos apresentados abaixo, devido a dependências:
+pip install opencv-python
+"""
+
 from datetime import datetime
 import os
 import psutil
@@ -8,11 +13,22 @@ import pyautogui
 import logging
 
 def ComparaArquivo(Arq1,Arq2,ArqDif):
+    """
+    Criação: 27/09/2022 Última Revisão 27/09/2022 Último Autor: Kleber
+    Arq1 = Caminho e nome do arquivo que está guardado. Exemplo: "C:/GitHub/Auto_TGC/Automacao/Escrita_Fiscal/Geracao_De_Informacoes_Oficiais/SPED_Fiscal/108805/Origem.txt" 
+    Arq2 = Caminho e nome do arquivo de origem. Exemplo: "C:/Users/Desenvolvedor/Documents/Report.txt" 
+    ArqDif = Caminho e nome do arquivo que vai demonstrar as diferenças. Exemplo: "C:\\GitHub\\Auto_TGC\\Automacao\\Escrita_Fiscal\\Geracao_De_Informacoes_Oficiais\\SPED_Fiscal\\108805\\Difer.txt"     
+    """    
+    #Cria o arquivo que vai demostrar as diferenças
     flog = open(ArqDif, "w")
+    #Abre o arquivo que fica guardado
     f1 = open(Arq1, "r")  
+    #Abre o arquivo que foi gerado agora
     f2 = open(Arq2, "r")          
     i = 0
+    #Inicia a variável TemDif como falso. Ela dirá se tem diferença ou não
     TemDif = False
+    #Inicia a leitura dos dois arquivos para ver se há diferença
     for line1 in f1:
         i += 1
         for line2 in f2:
@@ -24,13 +40,22 @@ def ComparaArquivo(Arq1,Arq2,ArqDif):
                 flog.write('Antes  : ' + line1)
                 flog.write('Depois: ' + line2)
                 break
+    #Fecha todos arquivos manipulados
     f1.close()                                       
     f2.close()
     flog.close()
+    #Se tiver encontrado diferença, vai criar no LOG geral a linha abaixo, pedindo para ir no LOG de diferença para ver o que houve.
     if TemDif:
        GeraLog(False,"O arquivo está diferente. Favor consultar " + ArqDif)
 
-def SelecionaEmpresa(CodigoEmpresa):
+def SelecionaEmpresa(CodigoEmpresa,TelaCertificado):
+    """
+    Criação: 27/09/2022 Última Revisão 27/09/2022 Último Autor: Kleber
+    CodigoEmpresa = Informe o código da empresa a ser selecionada. Exemplo: 21
+    TelaCertificado = Após informar o código da empresa, pode ser que apareça a tela de certificados
+                      vencidos. Informe True para dar um ESC nesta tela ou False caso o seu ambiente
+                      de teste não apareça essa tela.
+    """
     #Diretório atual
     DirAtu = os.getcwd()
     #Diretório onde está a imagem a ser pesquisada
@@ -39,14 +64,27 @@ def SelecionaEmpresa(CodigoEmpresa):
     os.chdir(DirImg)
     #Pesquisa a imagem no menu principal e clica no campo
     pyautogui.click( pyautogui.locateCenterOnScreen('SelecaoEmpresa.png', confidence=0.9) )
+    #Vai para o início da lista de empresas
+    pyautogui.hotkey('ctrl','home')
     #Escreve o código da empresa
-    pyautogui.typewrite(CodigoEmpresa)
+    pyautogui.typewrite(str(CodigoEmpresa))
     #Tecla enter
     pyautogui.press('enter')
+    if TelaCertificado:
+        pyautogui.press('esc')
     #Volta para o diretório atual.
     os.chdir(DirAtu)
 
-def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano):    
+def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano,MensagemPendencia):
+    """
+    Criação: 27/09/2022 Última Revisão 27/09/2022 Último Autor: Kleber
+    AnoCriacaoScript = O ano que o script que está desenvolvendo foi criado. Exemplo: 2022
+    Mes = Qual o mês que deseja selecionar. Exemplo: 8
+    Ano = Qual o ano que deseja selecionar. Exemplo: 2022
+    MensagemPendencia = Pode ser que após a seleção do período, apareça uma mensagem dizendo que não há pendências para 
+                        os empregados. Informe True para que seja teclado ENTER na mensagem ou False caso seu ambiente
+                        de teste não apresente esta mensagem.    
+    """
     #Diretório atual
     DirAtu = os.getcwd()
     #Diretório onde está a imagem a ser pesquisada
@@ -71,14 +109,23 @@ def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano):
             else:
                 pyautogui.doubleClick( pyautogui.locateCenterOnScreen(QualMes+'1.png', confidence=0.9) )
             break
+    if MensagemPendencia:
+        pyautogui.press('enter')
     #Volta para o diretório atual.
     os.chdir(DirAtu)
 
 def GeraLog(apagarDadosLog, TextoDoLog):
+    """
+    Criação: 27/09/2022 Última Revisão 27/09/2022 Último Autor: Kleber
+    apagarDadosLog = Quando passado True, vai apagar o LOG. Deve ser passado informado assim, na primeira linha do plano de execução.
+                     Passo False, ele mantem o conteúdo.
+    TextoDoLog = Informe o texto que deseja ser demonstrado no LOG. Exemplo: "O valor do salário família está errado"
+    """
+    #Criação do LOG
     if (not os.path.exists("C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\LogAuto.txt")) or (apagarDadosLog==True): # se o arquivo não existir, ele cria um novo. Ou para limpar os arquivos. 
         f = open("C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\LogAuto.txt", "w")
         f.write("Inicio do Log\n\n") 
-    
+    #Efetuando configurações iniciais sobre o arquivo de LOG
     logging.basicConfig(filename='C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\LogAuto.txt', 
                         filemode='a',
                         level=logging.DEBUG) # configuração inicial
@@ -87,8 +134,14 @@ def GeraLog(apagarDadosLog, TextoDoLog):
     logging.warning(now.strftime("%d/%m/%Y, %H:%M:%S" + " - " + TextoDoLog)) # escreve no log
 
 def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
+    """
+    Criação: 27/09/2022 Última Revisão 27/09/2022 Último Autor: Kleber
+    Redmine = Informe o número da tarefa Redmine a ser automatizada. Esta informação é a pasta onde está o banco e demais arquivos que serão utilizados. Exemplo: '108855'
+    IniciaIntegrador = Informe True se para esta automação será necessário iniciar o Tron Integrador. Caso contrário, informe False
+    ModuloSis = Informe qual módulo receberá a automação. Exemplo: '\Folha.exe'
+    """
     #Carregando o arquivo de log
-    GeraLog(True,"Iniciando a preparação do ambiente para testar a tarefa " + Redmine)
+    GeraLog(False,"Iniciando a preparação do ambiente para testar a tarefa " + Redmine)
 
     #Verificando se o módulo está aberto, para poder fechá-lo
     ModuloEstaRodando = False
@@ -97,7 +150,8 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
            ModuloEstaRodando = True
            break
     if  ModuloEstaRodando:
-        os.system('taskkill /IM ' + ModuloSis[1:] + '.exe /F')
+        os.system('taskkill /IM ' + ModuloSis[1:] + '.exe /F')        
+        time.sleep(3)        
 
     #Colhendo dados sobre o serviço do Firebird para testes
     service = psutil.win_service_get('FirebirdServerTGCTRON')
