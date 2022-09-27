@@ -1,7 +1,94 @@
 Inicio do Log
 
-9/2022, 08:58:24 - Iniciando a preparação do ambiente para testar a tarefa 108805
-WARNING:root:27/09/2022, 08:58:54 - Preparação do Ambiente finalizada
-WARNING:root:27/09/2022, 09:27:54 - O arquivo está diferente. Favor consultar C:\GitHub\Auto_TGC\Automacao\Framework\Diferente.txt
-WARNING:root:27/09/2022, 11:07:02 - Iniciando a preparação do ambiente para testar a tarefa 108805
-WARNING:root:27/09/2022, 11:07:08 - Não existe o arquivo BANCO.RAR
+9/2022, 15:46:28 - Iniciado a Seleção da empresa
+WARNING:root:27/09/2022, 15:46:29 - Concluída a Seleção da empresa
+WARNING:root:27/09/2022, 15:47:08 - Iniciado a Seleção da empresa
+WARNING:root:27/09/2022, 15:47:08 - Concluída a Seleção da empresa
+WARNING:root:27/09/2022, 15:47:42 - Iniciado a Seleção da empresa
+WARNING:root:27/09/2022, 15:47:43 - Concluída a Seleção da empresa
+WARNING:root:27/09/2022, 15:48:26 - Concluída a Seleção da empresa
+WARNING:root:27/09/2022, 15:50:47 - Iniciado a Seleção da empresa
+WARNING:root:27/09/2022, 15:50:48 - Concluída a Seleção da empresa
+WARNING:root:27/09/2022, 15:51:21 - Iniciado a Seleção da empresa
+WARNING:root:27/09/2022, 15:51:21 - Concluída a Seleção da empresa
+WARNING:root:27/09/2022, 15:54:45 - Iniciado a Seleção da empresa
+WARNING:root:27/09/2022, 15:54:46 - Concluída a Seleção da empresa
+WARNING:root:27/09/2022, 15:56:30 - Iniciado a Seleção da empresa
+WARNING:root:27/09/2022, 15:56:31 - Concluída a Seleção da empresa
+WARNING:root:27/09/2022, 15:58:19 - Iniciado a Seleção da empresa
+WARNING:root:27/09/2022, 15:58:20 - Concluída a Seleção da empresa
+WARNING:root:27/09/2022, 15:59:16 - Iniciando a preparação do ambiente para testar a tarefa 108805
+WARNING:root:27/09/2022, 15:59:46 - Preparação do Ambiente finalizada
+WARNING:root:27/09/2022, 15:59:56 - Iniciado a Seleção da empresa
+WARNING:root:27/09/2022, 15:59:57 - Concluída a Seleção da empresa
+WARNING:root:27/09/2022, 15:59:57 - Iniciado a Seleção do período
+WARNING:root:27/09/2022, 15:59:59 - Concluído a Seleção do período
+WARNING:root:27/09/2022, 15:59:59 - Iniciado a quebra das apurações
+WARNING:root:27/09/2022, 16:00:03 - Concluído a quebra das apurações
+WARNING:root:27/09/2022, 16:00:03 - Iniciado a apuração do ICMS / IPI / EFD
+WARNING:root:27/09/2022, 16:01:36 - Iniciado a Seleção do período
+WARNING:root:27/09/2022, 16:01:39 - Concluído a Seleção do período
+WARNING:root:27/09/2022, 16:01:59 - Iniciado a Seleção do período
+WARNING:root:27/09/2022, 16:02:01 - Concluído a Seleção do período
+WARNING:root:27/09/2022, 16:03:02 - Iniciado a Seleção do período
+WARNING:root:27/09/2022, 16:03:04 - Concluído a Seleção do período
+WARNING:root:27/09/2022, 16:04:07 - Iniciando a preparação do ambiente para testar a tarefa 108805
+WARNING:root:27/09/2022, 16:04:36 - Preparação do Ambiente finalizada
+WARNING:root:27/09/2022, 16:04:49 - Iniciado a Seleção da empresa
+WARNING:root:27/09/2022, 16:04:50 - Concluída a Seleção da empresa
+WARNING:root:27/09/2022, 16:04:53 - Iniciado a Seleção do período
+WARNING:root:27/09/2022, 16:04:55 - Concluído a Seleção do período
+WARNING:root:27/09/2022, 16:04:58 - Iniciado a quebra das apurações
+WARNING:root:27/09/2022, 16:05:02 - Concluído a quebra das apurações
+WARNING:root:27/09/2022, 16:05:05 - Iniciado a apuração do ICMS / IPI / EFD
+WARNING:root:27/09/2022, 16:06:01 - Iniciando a preparação do ambiente para testar a tarefa 108805
+WARNING:root:27/09/2022, 16:06:28 - Preparação do Ambiente finalizada
+WARNING:root:27/09/2022, 16:06:41 - Iniciado a Seleção da empresa
+WARNING:root:27/09/2022, 16:06:44 - Concluída a Seleção da empresa
+WARNING:root:27/09/2022, 16:06:47 - Iniciado a Seleção do período
+WARNING:root:27/09/2022, 16:06:49 - Concluído a Seleção do período
+WARNING:root:27/09/2022, 16:08:06 - Iniciando a preparação do ambiente para testar a tarefa 108805
+WARNING:root:27/09/2022, 16:08:36 - Preparação do Ambiente finalizada
+WARNING:root:27/09/2022, 16:08:49 - Iniciado a Seleção da empresa
+WARNING:root:27/09/2022, 16:08:52 - Concluída a Seleção da empresa
+WARNING:root:27/09/2022, 16:08:55 - Iniciado a Seleção do período
+WARNING:root:27/09/2022, 16:08:57 - Concluído a Seleção do período
+WARNING:root:27/09/2022, 16:09:00 - Iniciado a quebra das apurações
+WARNING:root:27/09/2022, 16:09:04 - Concluído a quebra das apurações
+WARNING:root:27/09/2022, 16:09:07 - Iniciado a apuração do ICMS / IPI / EFD
+WARNING:root:27/09/2022, 16:09:26 - Concluído a apuração do ICMS / IPI / EFD
+WARNING:root:27/09/2022, 16:09:29 - Iniciado a geração do Sped Fiscal
+WARNING:root:27/09/2022, 16:09:41 - Concluído a geração do Sped Fiscal
+WARNING:root:27/09/2022, 16:09:44 - Iniciado a comparação de arquivos
+WARNING:root:27/09/2022, 16:09:44 - O arquivo está diferente. Favor consultar C:\GitHub\Auto_TGC\Automacao\Escrita_Fiscal\Geracao_De_Informacoes_Oficiais\SPED_Fiscal\108805\Difer.txt
+WARNING:root:27/09/2022, 16:09:44 - Concluído a comparação de arquivos
+WARNING:root:27/09/2022, 16:12:27 - Iniciando a preparação do ambiente para testar a tarefa 108805
+WARNING:root:27/09/2022, 16:12:56 - Preparação do Ambiente finalizada
+WARNING:root:27/09/2022, 16:13:08 - Iniciado a Seleção da empresa
+WARNING:root:27/09/2022, 16:13:10 - Concluída a Seleção da empresa
+WARNING:root:27/09/2022, 16:13:12 - Iniciado a Seleção do período
+WARNING:root:27/09/2022, 16:13:14 - Concluído a Seleção do período
+WARNING:root:27/09/2022, 16:13:16 - Iniciado a quebra das apurações
+WARNING:root:27/09/2022, 16:13:21 - Concluído a quebra das apurações
+WARNING:root:27/09/2022, 16:13:23 - Iniciado a apuração do ICMS / IPI / EFD
+WARNING:root:27/09/2022, 16:13:41 - Concluído a apuração do ICMS / IPI / EFD
+WARNING:root:27/09/2022, 16:13:43 - Iniciado a geração do Sped Fiscal
+WARNING:root:27/09/2022, 16:13:59 - Concluído a geração do Sped Fiscal
+WARNING:root:27/09/2022, 16:14:01 - Iniciado a comparação de arquivos
+WARNING:root:27/09/2022, 16:14:01 - O arquivo está diferente. Favor consultar C:\GitHub\Auto_TGC\Automacao\Escrita_Fiscal\Geracao_De_Informacoes_Oficiais\SPED_Fiscal\108805\Difer.txt
+WARNING:root:27/09/2022, 16:14:01 - Concluído a comparação de arquivos
+WARNING:root:27/09/2022, 16:18:40 - Iniciando a preparação do ambiente para testar a tarefa 108805
+WARNING:root:27/09/2022, 16:19:09 - Preparação do Ambiente finalizada
+WARNING:root:27/09/2022, 16:19:19 - Iniciado a Seleção da empresa
+WARNING:root:27/09/2022, 16:19:22 - Concluída a Seleção da empresa
+WARNING:root:27/09/2022, 16:19:22 - Iniciado a Seleção do período
+WARNING:root:27/09/2022, 16:19:24 - Concluído a Seleção do período
+WARNING:root:27/09/2022, 16:19:24 - Iniciado a quebra das apurações
+WARNING:root:27/09/2022, 16:19:28 - Concluído a quebra das apurações
+WARNING:root:27/09/2022, 16:19:28 - Iniciado a apuração do ICMS / IPI / EFD
+WARNING:root:27/09/2022, 16:19:47 - Concluído a apuração do ICMS / IPI / EFD
+WARNING:root:27/09/2022, 16:19:47 - Iniciado a geração do Sped Fiscal
+WARNING:root:27/09/2022, 16:20:02 - Concluído a geração do Sped Fiscal
+WARNING:root:27/09/2022, 16:20:02 - Iniciado a comparação de arquivos
+WARNING:root:27/09/2022, 16:20:02 - O arquivo está diferente. Favor consultar C:\GitHub\Auto_TGC\Automacao\Escrita_Fiscal\Geracao_De_Informacoes_Oficiais\SPED_Fiscal\108805\Difer.txt
+WARNING:root:27/09/2022, 16:20:02 - Concluído a comparação de arquivos

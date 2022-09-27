@@ -1,4 +1,5 @@
 """
+O Visual Studio Code deve ser acessado como administrador
 Pacotes que devem ser instalados, além dos apresentados abaixo, devido a dependências:
 pip install opencv-python
 """
@@ -12,6 +13,62 @@ import time
 import pyautogui
 import logging
 
+def GeraSpedFiscal(TempoConclusao):
+    """"
+    Criação: 27/09/2022 Última Revisão 27/09/2022 Último Autor: Kleber
+    Método para realizar a geração do arquivo de SPED Fiscal da Escrita Fiscal
+    TempoConclusao = informe em segundos, o tempo que leva para terminar a geração do arquivo
+    """
+    GeraLog(False,"Iniciado a geração do Sped Fiscal")
+    pyautogui.click(815,291)
+    pyautogui.press(['alt','g','0','9'])
+    time.sleep(3)
+    pyautogui.press('f11')
+    time.sleep(TempoConclusao)
+    pyautogui.press(['enter','esc'])
+    GeraLog(False,"Concluído a geração do Sped Fiscal")
+
+def ApuraICMS_IPI_EFD(TempoAbertura,TempoConclusao,FicaNaTela):
+    """"
+    Criação: 27/09/2022 Última Revisão 27/09/2022 Último Autor: Kleber
+    Método para realizar a apuração de ICMS/IPI/EFD da Escrita Fiscal
+    TempoAbertura = informe em segundos, o tempo que leva para abrir a opção
+    TempoConclusao = informe em segundos, o tempo que leva para terminar a apuração
+    FicaNaTela = informe True se deseja permanecer com a tela aberta, caso queira realizar algum outro teste ou False, se já querer sair
+    """
+    GeraLog(False,"Iniciado a apuração do ICMS / IPI / EFD")
+    pyautogui.click(815,291)
+    pyautogui.press(['alt','m','1','5'])
+    time.sleep(TempoAbertura)
+    pyautogui.press('f11')
+    time.sleep(TempoConclusao)
+    if not FicaNaTela:
+        pyautogui.press('esc')
+    GeraLog(False,"Concluído a apuração do ICMS / IPI / EFD")
+
+def QuebraApuracaoEscrita(Mes,Ano):
+    """"
+    Criação: 27/09/2022 Última Revisão 27/09/2022 Último Autor: Kleber
+    Método para quebrar as apurações da Escrita Fiscal
+    Mes = Mes selecionado. Exemplo: '04'
+    Ano = Ano selecionado. Exemplo: '2017'
+    """
+    GeraLog(False,"Iniciado a quebra das apurações")
+    pyautogui.click(815,291)
+    pyautogui.press(['alt','m','0','5'])
+    time.sleep(3)
+    pyautogui.press('insert')
+    pyautogui.typewrite('o')
+    pyautogui.press(['tab','enter'])
+    pyautogui.typewrite('01'+Mes+Ano)
+    pyautogui.press(['enter','enter'])
+    pyautogui.typewrite('Quebrando as apurações')
+    pyautogui.press('enter')
+    pyautogui.typewrite('1')
+    pyautogui.press(['enter','f11','s','del','s','esc'])
+    pyautogui.click(815,291)
+    GeraLog(False,"Concluído a quebra das apurações")
+    
 def ComparaArquivo(Arq1,Arq2,ArqDif):
     """
     Criação: 27/09/2022 Última Revisão 27/09/2022 Último Autor: Kleber
@@ -19,12 +76,13 @@ def ComparaArquivo(Arq1,Arq2,ArqDif):
     Arq2 = Caminho e nome do arquivo de origem. Exemplo: "C:/Users/Desenvolvedor/Documents/Report.txt" 
     ArqDif = Caminho e nome do arquivo que vai demonstrar as diferenças. Exemplo: "C:\\GitHub\\Auto_TGC\\Automacao\\Escrita_Fiscal\\Geracao_De_Informacoes_Oficiais\\SPED_Fiscal\\108805\\Difer.txt"     
     """    
+    GeraLog(False,"Iniciado a comparação de arquivos")
     #Cria o arquivo que vai demostrar as diferenças
     flog = open(ArqDif, "w")
     #Abre o arquivo que fica guardado
-    f1 = open(Arq1, "r")  
+    f1 = open(Arq1, "r", encoding ="utf8")  
     #Abre o arquivo que foi gerado agora
-    f2 = open(Arq2, "r")          
+    f2 = open(Arq2, "r", encoding ="utf8")          
     i = 0
     #Inicia a variável TemDif como falso. Ela dirá se tem diferença ou não
     TemDif = False
@@ -47,6 +105,7 @@ def ComparaArquivo(Arq1,Arq2,ArqDif):
     #Se tiver encontrado diferença, vai criar no LOG geral a linha abaixo, pedindo para ir no LOG de diferença para ver o que houve.
     if TemDif:
        GeraLog(False,"O arquivo está diferente. Favor consultar " + ArqDif)
+    GeraLog(False,"Concluído a comparação de arquivos")
 
 def SelecionaEmpresa(CodigoEmpresa,TelaCertificado):
     """
@@ -56,6 +115,7 @@ def SelecionaEmpresa(CodigoEmpresa,TelaCertificado):
                       vencidos. Informe True para dar um ESC nesta tela ou False caso o seu ambiente
                       de teste não apareça essa tela.
     """
+    GeraLog(False,"Iniciado a Seleção da empresa")
     #Diretório atual
     DirAtu = os.getcwd()
     #Diretório onde está a imagem a ser pesquisada
@@ -63,17 +123,19 @@ def SelecionaEmpresa(CodigoEmpresa,TelaCertificado):
     #Acessa diretório da imagem
     os.chdir(DirImg)
     #Pesquisa a imagem no menu principal e clica no campo
-    pyautogui.click( pyautogui.locateCenterOnScreen('SelecaoEmpresa.png', confidence=0.9) )
+    pyautogui.click( pyautogui.locateCenterOnScreen('SelecaoEmpresa.png', confidence=0.9) ) 
     #Vai para o início da lista de empresas
     pyautogui.hotkey('ctrl','home')
     #Escreve o código da empresa
     pyautogui.typewrite(str(CodigoEmpresa))
     #Tecla enter
     pyautogui.press('enter')
+    time.sleep(2)
     if TelaCertificado:
         pyautogui.press('esc')
     #Volta para o diretório atual.
     os.chdir(DirAtu)
+    GeraLog(False,"Concluída a Seleção da empresa")
 
 def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano,MensagemPendencia):
     """
@@ -85,6 +147,7 @@ def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano,MensagemPendencia):
                         os empregados. Informe True para que seja teclado ENTER na mensagem ou False caso seu ambiente
                         de teste não apresente esta mensagem.    
     """
+    GeraLog(False,"Iniciado a Seleção do período")
     #Diretório atual
     DirAtu = os.getcwd()
     #Diretório onde está a imagem a ser pesquisada
@@ -92,7 +155,7 @@ def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano,MensagemPendencia):
     #Acessa diretório da imagem
     os.chdir(DirImg)
     #Rotina para clicar no Ano a ser selecionado
-    VoltaAno = ( (AnoCriacaoScript - Ano) + 1 )
+    VoltaAno = ( (AnoCriacaoScript - Ano) )
     if VoltaAno == 1:
         VoltaAno = 0
     while VoltaAno > 0:
@@ -111,8 +174,11 @@ def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano,MensagemPendencia):
             break
     if MensagemPendencia:
         pyautogui.press('enter')
+    #Clica no meio da tela para dar o foco
+    pyautogui.click(815,291)
     #Volta para o diretório atual.
     os.chdir(DirAtu)
+    GeraLog(False,"Concluído a Seleção do período")
 
 def GeraLog(apagarDadosLog, TextoDoLog):
     """
@@ -386,5 +452,4 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
 
     #Chamando o módulo TGC
     os.startfile("C:\Program Files (x86)\Tron" + ModuloSis + ModuloSis + ".exe")
-
     time.sleep(10)
