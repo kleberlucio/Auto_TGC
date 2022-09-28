@@ -5,6 +5,8 @@ pip install opencv-python
 """
 
 from datetime import datetime
+from winreg import *
+import winreg
 import os
 import psutil
 import patoolib
@@ -13,62 +15,31 @@ import time
 import pyautogui
 import logging
 
-def GeraSpedFiscal(TempoConclusao):
-    """"
-    Criação: 27/09/2022 Última Revisão 27/09/2022 Último Autor: Kleber
-    Método para realizar a geração do arquivo de SPED Fiscal da Escrita Fiscal
-    TempoConclusao = informe em segundos, o tempo que leva para terminar a geração do arquivo
+def VerificaEmpresaPeriodoSelecionado(Empresa,Mes,Ano):
     """
-    GeraLog(False,"Iniciado a geração do Sped Fiscal")
-    pyautogui.click(815,291)
-    pyautogui.press(['alt','g','0','9'])
-    time.sleep(3)
-    pyautogui.press('f11')
-    time.sleep(TempoConclusao)
-    pyautogui.press(['enter','esc'])
-    GeraLog(False,"Concluído a geração do Sped Fiscal")
+    Criação: 28/09/2022 Última Revisão 28/09/2022 Último Autor: Kleber
+    Empresa = Informe o código da empresa selecionada. Exemplo: '10'
+    Mes = Informe o mês selecionado. Exemplo: '5'
+    Ano = Informe o ano selecionado. Exemplo: '2020'
+    """    
+    GeraLog(False,"Iniciado a verificação da empresa, mês e ano selecionado")
+    aReg = winreg.ConnectRegistry(None,HKEY_CURRENT_USER)
+    aKey = winreg.OpenKey(aReg,r"SOFTWARE\Tron\Selecionado")
+    try:
+        i = 0
+        while 1:
+            name, value, type = EnumValue(aKey, i)
+            if name == 'Codigo' and not (Empresa == value):
+                GeraLog(False,"ERRO - Não selecionou a empresa correta")
+            if name == 'Mes' and not (Mes == value):
+                GeraLog(False,"ERRO - Não selecionou o mês correto")
+            if name == 'Ano' and not (Ano == value):
+                GeraLog(False,"ERRO - Não selecionou o ano correto")
+            i += 1
+    except WindowsError:
+        GeraLog(False,"Finalizada a verificação da empresa, mês e ano selecionado")
+    CloseKey(aKey)
 
-def ApuraICMS_IPI_EFD(TempoAbertura,TempoConclusao,FicaNaTela):
-    """"
-    Criação: 27/09/2022 Última Revisão 27/09/2022 Último Autor: Kleber
-    Método para realizar a apuração de ICMS/IPI/EFD da Escrita Fiscal
-    TempoAbertura = informe em segundos, o tempo que leva para abrir a opção
-    TempoConclusao = informe em segundos, o tempo que leva para terminar a apuração
-    FicaNaTela = informe True se deseja permanecer com a tela aberta, caso queira realizar algum outro teste ou False, se já querer sair
-    """
-    GeraLog(False,"Iniciado a apuração do ICMS / IPI / EFD")
-    pyautogui.click(815,291)
-    pyautogui.press(['alt','m','1','5'])
-    time.sleep(TempoAbertura)
-    pyautogui.press('f11')
-    time.sleep(TempoConclusao)
-    if not FicaNaTela:
-        pyautogui.press('esc')
-    GeraLog(False,"Concluído a apuração do ICMS / IPI / EFD")
-
-def QuebraApuracaoEscrita(Mes,Ano):
-    """"
-    Criação: 27/09/2022 Última Revisão 27/09/2022 Último Autor: Kleber
-    Método para quebrar as apurações da Escrita Fiscal
-    Mes = Mes selecionado. Exemplo: '04'
-    Ano = Ano selecionado. Exemplo: '2017'
-    """
-    GeraLog(False,"Iniciado a quebra das apurações")
-    pyautogui.click(815,291)
-    pyautogui.press(['alt','m','0','5'])
-    time.sleep(3)
-    pyautogui.press('insert')
-    pyautogui.typewrite('o')
-    pyautogui.press(['tab','enter'])
-    pyautogui.typewrite('01'+Mes+Ano)
-    pyautogui.press(['enter','enter'])
-    pyautogui.typewrite('Quebrando as apurações')
-    pyautogui.press('enter')
-    pyautogui.typewrite('1')
-    pyautogui.press(['enter','f11','s','del','s','esc'])
-    pyautogui.click(815,291)
-    GeraLog(False,"Concluído a quebra das apurações")
-    
 def ComparaArquivo(Arq1,Arq2,ArqDif):
     """
     Criação: 27/09/2022 Última Revisão 27/09/2022 Último Autor: Kleber
@@ -104,7 +75,7 @@ def ComparaArquivo(Arq1,Arq2,ArqDif):
     flog.close()
     #Se tiver encontrado diferença, vai criar no LOG geral a linha abaixo, pedindo para ir no LOG de diferença para ver o que houve.
     if TemDif:
-       GeraLog(False,"O arquivo está diferente. Favor consultar " + ArqDif)
+       GeraLog(False,"ERRO - O arquivo está diferente. Favor consultar " + ArqDif)
     GeraLog(False,"Concluído a comparação de arquivos")
 
 def SelecionaEmpresa(CodigoEmpresa,TelaCertificado):
@@ -233,7 +204,7 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
 
     #Verificando, caso o serviço ainda esteja rodando, tenho que parar a execução da função
     if (service and service['status'] == 'running'):
-        GeraLog(False,"Não foi possível parar o serviço do Firebird")
+        GeraLog(False,"ERRO - Não foi possível parar o serviço do Firebird")
         return        
 
     #Colhendo dados sobre o serviço do Tron Integrador para testes
@@ -250,7 +221,7 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
 
     #Caso o serviço ainda esteja rodando, tenho que parar a execução da função
     if (service and service['status'] == 'running'):
-        GeraLog(False,"Não foi possível parar o serviço do Tron Integrador")
+        GeraLog(False,"ERRO - Não foi possível parar o serviço do Tron Integrador")
         return
 
     #Excluindo relatórios gerados pelo sistema
@@ -259,7 +230,7 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
 
     #Verificando se o arquivo foi de fato excluido. Caso contrário, tenho que parar a execução da função
     if os.path.exists("C:\\Users\\Public\\Documents\\Report.pdf"):
-        GeraLog(False,"Não foi possível excluir o arquivo Report.pdf")
+        GeraLog(False,"ERRO - Não foi possível excluir o arquivo Report.pdf")
         return
 
     #Excluindo relatórios gerados pelo sistema
@@ -268,7 +239,7 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
 
     #Verificando se o arquivo foi de fato excluido. Caso contrário, tenho que parar a execução da função
     if os.path.exists("C:\\Users\\Public\\Documents\\Report.prn"):
-        GeraLog(False,"Não foi possível excluir o arquivo Report.prn")
+        GeraLog(False,"ERRO - Não foi possível excluir o arquivo Report.prn")
         return
 
     #Excluindo arquivos XML utilizados anteriormente
@@ -282,7 +253,7 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
     for filePath in fileList:
         TemXML = True
     if TemXML:
-        GeraLog(False,"Não foi possível excluir todos os XML utilizados anteriormente")
+        GeraLog(False,"ERRO - Não foi possível excluir todos os XML utilizados anteriormente")
         return
 
     #Excluindo arquivos TXT utilizados anteriormente
@@ -296,7 +267,7 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
     for filePath in fileList:
         TemTXT = True
     if TemTXT:
-        GeraLog(False,"Não foi possível excluir todos os TXT utilizados anteriormente")
+        GeraLog(False,"ERRO - Não foi possível excluir todos os TXT utilizados anteriormente")
         return
 
     #Excluindo o banco utilizando anteriormente
@@ -305,12 +276,12 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
 
     #Verificando se o arquivo foi de fato excluido. Caso contrário, tenho que parar a execução da função
     if os.path.exists("C:\\Bancos\\troncg.idb"):
-        GeraLog(False,"Não foi possível excluir o TRONCG.IDB")
+        GeraLog(False,"ERRO - Não foi possível excluir o TRONCG.IDB")
         return
 
     #Verificando se existe o arquivo de banco compactado. Caso contrário, tenho que parar a execução da função
     if not os.path.exists("C:\\Bancos\\" + Redmine + "\\Banco.rar"):
-        GeraLog(False,"Não existe o arquivo BANCO.RAR")
+        GeraLog(False,"ERRO - Não existe o arquivo BANCO.RAR")
         return
 
     #Extrai o arquivo compactado na pasta bancos
@@ -319,7 +290,7 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
 
     #Verificando se existe o arquivo de banco descompactado. Caso contrário, tenho que parar a execução da função
     if not os.path.exists("C:\\Bancos\\troncg.idb"):
-        GeraLog(False,"Não o arquivo TRONCG.IDB após a descompactação")
+        GeraLog(False,"ERRO - Não o arquivo TRONCG.IDB após a descompactação")
         return
 
     #Extrai arquivos de importação
@@ -346,12 +317,12 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
 
     #Verificando se existe o Atualiza.bin. Caso contrário, tenho que parar a execução da função
     if not os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.bin"):
-        GeraLog(False,"Ocorreu falha ao renomear o Atualiza.bin")
+        GeraLog(False,"ERRO - Ocorreu falha ao renomear o Atualiza.bin")
         return
 
     #Verificando se existe o Atualiza.ban. Caso contrário, tenho que parar a execução da função
     if not os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.ban"):
-        GeraLog(False,"Ocorreu falha ao renomear o Atualiza.ban")        
+        GeraLog(False,"ERRO - Ocorreu falha ao renomear o Atualiza.ban")        
         return
 
     #Iniciando o Firebird
@@ -363,7 +334,7 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
 
     #Verificando se o serviço do Firebird foi iniciado. Caso contrário, tenho que parar a execução da função
     if not (service and service['status'] == 'running'):
-        GeraLog(False,"Ocorreu falha ao tentar iniciar o Firebird")
+        GeraLog(False,"ERRO - Ocorreu falha ao tentar iniciar o Firebird")
         return
 
     #Chamando o módulo TGC
@@ -379,7 +350,7 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
             ModuloEstaRodando = True
             break
     if not ModuloEstaRodando:
-        GeraLog(False,"O processo do módulo " + ModuloSis[1:] + ".exe não está em execução")
+        GeraLog(False,"ERRO - O processo do módulo " + ModuloSis[1:] + ".exe não está em execução")
         return
 
     #Restruturando o banco. O tempo limite de espera será de 10 minutos
@@ -396,11 +367,11 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
             DeuLog = True
             break
     if TempoLimite > 600:
-        GeraLog(False,"A estruturação do banco levou mais de 10 minutos.")
+        GeraLog(False,"ERRO - A estruturação do banco levou mais de 10 minutos.")
         return
 
     if DeuLog:
-        GeraLog(False,"Ocorreu LOG de banco após a restruturação. Acionar DBA.")
+        GeraLog(False,"ATENCAO - Ocorreu LOG de banco após a restruturação. Acionar DBA.")
     
     #Encerrando o módulo
     os.system('taskkill /IM ' + ModuloSis[1:] + '.exe /F')
@@ -415,7 +386,7 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
             ModuloEstaRodando = True
             break
     if  ModuloEstaRodando:
-        GeraLog(False,"O processo " + ModuloSis[1:] + ".exe ainda está rodando")
+        GeraLog(False,"ERRO - O processo " + ModuloSis[1:] + ".exe ainda está rodando")
         return
 
     #Iniciando o processo do Tron Integrador
@@ -445,7 +416,7 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
 
         #Verificando, caso o serviço não esteja rodando, tenho que parar a execução da função
         if not (service and service['status'] == 'running'):
-            GeraLog(False,"Ocorreu falha ao iniciar o Tron Integrador")
+            GeraLog(False,"ERRO - Ocorreu falha ao iniciar o Tron Integrador")
             return
 
     GeraLog(False,"Preparação do Ambiente finalizada")
