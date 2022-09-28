@@ -5,7 +5,6 @@ pip install opencv-python
 """
 
 from repository_comuns import *
-import os
 import time
 import pyautogui
 
@@ -16,22 +15,17 @@ def GeraSpedFiscal(TempoConclusao):
     TempoConclusao = informe em segundos, o tempo que leva para terminar a geração do arquivo
     """
     GeraLog(False,"Iniciado a geração do Sped Fiscal")
-    #Diretório atual
-    DirAtu = os.getcwd()
-    #Diretório onde está a imagem a ser pesquisada
-    DirImg = "C:\GitHub\Auto_TGC\Automacao\Framework\img"
-    #Acessa diretório da imagem
-    os.chdir(DirImg)
     pyautogui.click(815,291)
     pyautogui.press(['alt','g','0','9'])
     time.sleep(3)
     pyautogui.press('f11')
     time.sleep(TempoConclusao)
-    if not ( pyautogui.locateCenterOnScreen('SpedFiscalGeraldoComSucesso.png', confidence=0.9) ):
+    if not ExisteImagem('SpedFiscalGeraldoComSucesso.png'):
         GeraLog(False,"ERRO - A geração não concluiu da forma esperada")
+        return False
     pyautogui.press(['enter','esc'])
-    os.chdir(DirAtu)
     GeraLog(False,"Concluído a geração do Sped Fiscal")
+    return True
 
 def ApuraICMS_IPI_EFD(TempoAbertura,TempoConclusao,FicaNaTela):
     """"
@@ -42,14 +36,27 @@ def ApuraICMS_IPI_EFD(TempoAbertura,TempoConclusao,FicaNaTela):
     FicaNaTela = informe True se deseja permanecer com a tela aberta, caso queira realizar algum outro teste ou False, se já querer sair
     """
     GeraLog(False,"Iniciado a apuração do ICMS / IPI / EFD")
+    #Clica no meio da tela
     pyautogui.click(815,291)
+    #Acessa a opção de apuração
     pyautogui.press(['alt','m','1','5'])
+    #Aguarda a abertura da opção
     time.sleep(TempoAbertura)
+    #Manda fazer a apuração
     pyautogui.press('f11')
+    #Aguarda a apuração terminar
     time.sleep(TempoConclusao)
+    #Pergunta se deseja permanecer na tela ou não para fazer mais testes.
+    #No caso, está saindo da tela.
     if not FicaNaTela:
+        #Saindo da opção
         pyautogui.press('esc')
+        time.sleep(1)
+        if not ExisteImagem('RetornoOKparaMenuPrincipal.png'):
+            GeraLog(False,"ERRO - Ocorreu algo não esperado após a apuração")
+            return False
     GeraLog(False,"Concluído a apuração do ICMS / IPI / EFD")
+    return True
 
 def QuebraApuracaoEscrita(Mes,Ano):
     """"
@@ -71,8 +78,10 @@ def QuebraApuracaoEscrita(Mes,Ano):
     pyautogui.press('enter')
     pyautogui.typewrite('1')
     pyautogui.press(['enter','f11'])
-    if not ( pyautogui.locateCenterOnScreen('ConfirmacaoDeQuebraApuracaoICMSIPI.png', confidence=0.9) ):
+    if not ExisteImagem('ConfirmacaoDeQuebraApuracaoICMSIPI.png'):
         GeraLog(False,"ERRO - Não foi apresentada tela sobre quebra de apuração")
+        return False
     pyautogui.press(['s','del','s','esc'])
     pyautogui.click(815,291)
     GeraLog(False,"Concluído a quebra das apurações")
+    return True 
