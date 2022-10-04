@@ -22,6 +22,7 @@ def ExisteImagem(Imagem,Aguarda):
     """
     Criação: 28/09/2022 Última Revisão 28/09/2022 Último Autor: Kleber
     Imagem = Informe o nome da imagem a ser pesquisada na tela
+    Aguarda = Informe o tempo que deseja aguardar para a abertura da tela
     """    
     DirAtu = os.getcwd()
     #Diretório onde está a imagem a ser pesquisada
