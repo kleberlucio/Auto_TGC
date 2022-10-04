@@ -18,12 +18,17 @@ import logging
 import sys
 
 def ExisteImagem(Imagem):
+    """
+    Criação: 28/09/2022 Última Revisão 28/09/2022 Último Autor: Kleber
+    Imagem = Informe o nome da imagem a ser pesquisada na tela
+    """    
     DirAtu = os.getcwd()
     #Diretório onde está a imagem a ser pesquisada
     DirImg = "C:\GitHub\Auto_TGC\Automacao\Framework\img"
     #Acessa diretório da imagem
     os.chdir(DirImg)
     time.sleep(1)
+    #Verifica se a imagem existe ou não na tela
     if not ( pyautogui.locateCenterOnScreen(Imagem, confidence=0.9) ):
         os.chdir(DirAtu)
         return False
