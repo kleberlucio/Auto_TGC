@@ -6,7 +6,8 @@ from repository_escrita import *
 try:
     if not PreparaAmbiente('108805',False,'\Escrita'):
         sys.exit(1)
-    SelecionaEmpresa(13,False)
+    if not SelecionaEmpresa(13,False):
+        sys.exit(1)
     SelecionaPeriodo(2022,4,2017,False)
     if not VerificaEmpresaPeriodoSelecionado('13','4','2017'):
         sys.exit(1)

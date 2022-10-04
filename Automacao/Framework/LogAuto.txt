@@ -1,19 +1,33 @@
 Inicio do Log
 
-9/2022, 10:00:52 - Iniciando a preparação do ambiente para testar a tarefa 108805
-WARNING:root:29/09/2022, 10:01:29 - Preparação do Ambiente finalizada
-WARNING:root:29/09/2022, 10:01:39 - Iniciado a Seleção da empresa
-WARNING:root:29/09/2022, 10:01:42 - Concluída a Seleção da empresa
-WARNING:root:29/09/2022, 10:01:42 - Iniciado a Seleção do período
-WARNING:root:29/09/2022, 10:01:44 - Concluído a Seleção do período
-WARNING:root:29/09/2022, 10:01:44 - Iniciado a verificação da empresa, mês e ano selecionado
-WARNING:root:29/09/2022, 10:01:44 - Finalizada a verificação da empresa, mês e ano selecionado
-WARNING:root:29/09/2022, 10:01:44 - Iniciado a quebra das apurações
-WARNING:root:29/09/2022, 10:01:50 - Concluído a quebra das apurações
-WARNING:root:29/09/2022, 10:01:50 - Iniciado a apuração do ICMS / IPI / EFD
-WARNING:root:29/09/2022, 10:02:10 - Concluído a apuração do ICMS / IPI / EFD
-WARNING:root:29/09/2022, 10:02:10 - Iniciado a geração do Sped Fiscal
-WARNING:root:29/09/2022, 10:02:27 - Concluído a geração do Sped Fiscal
-WARNING:root:29/09/2022, 10:02:27 - Iniciado a comparação de arquivos
-WARNING:root:29/09/2022, 10:02:27 - ERRO - O arquivo está diferente. Favor consultar C:\GitHub\Auto_TGC\Automacao\Escrita_Fiscal\Geracao_De_Informacoes_Oficiais\SPED_Fiscal\108805\Difer.txt
-WARNING:root:29/09/2022, 10:02:27 - Interrompido os testes sobre o cenário 108805, verificar LOG acima
+0/2022, 15:26:48 - Iniciando a preparação do ambiente para testar a tarefa 108805
+WARNING:root:04/10/2022, 15:27:18 - Preparação do Ambiente finalizada
+WARNING:root:04/10/2022, 15:27:28 - Iniciado a Seleção da empresa
+WARNING:root:04/10/2022, 15:27:29 - ERRO - Não abriu a tela para selecionar a empresa
+WARNING:root:04/10/2022, 15:27:29 - Iniciado a Seleção do período
+WARNING:root:04/10/2022, 15:27:31 - Concluído a Seleção do período
+WARNING:root:04/10/2022, 15:27:31 - Iniciado a verificação da empresa, mês e ano selecionado
+WARNING:root:04/10/2022, 15:27:31 - ERRO - Não selecionou a empresa correta
+WARNING:root:04/10/2022, 15:27:31 - Interrompido os testes sobre o cenário 108805, verificar LOG acima
+WARNING:root:04/10/2022, 15:43:57 - Iniciando a preparação do ambiente para testar a tarefa 108805
+WARNING:root:04/10/2022, 15:44:56 - Preparação do Ambiente finalizada
+WARNING:root:04/10/2022, 15:45:06 - Iniciado a Seleção da empresa
+WARNING:root:04/10/2022, 15:45:10 - Concluída a Seleção da empresa
+WARNING:root:04/10/2022, 15:45:10 - Interrompido os testes sobre o cenário 108805, verificar LOG acima
+WARNING:root:04/10/2022, 15:51:36 - Iniciando a preparação do ambiente para testar a tarefa 108805
+WARNING:root:04/10/2022, 15:52:38 - Preparação do Ambiente finalizada
+WARNING:root:04/10/2022, 15:52:48 - Iniciado a Seleção da empresa
+WARNING:root:04/10/2022, 15:52:52 - Concluída a Seleção da empresa
+WARNING:root:04/10/2022, 15:52:52 - Iniciado a Seleção do período
+WARNING:root:04/10/2022, 15:52:54 - Concluído a Seleção do período
+WARNING:root:04/10/2022, 15:52:54 - Iniciado a verificação da empresa, mês e ano selecionado
+WARNING:root:04/10/2022, 15:52:54 - Finalizada a verificação da empresa, mês e ano selecionado
+WARNING:root:04/10/2022, 15:52:54 - Iniciado a quebra das apurações
+WARNING:root:04/10/2022, 15:53:00 - Concluído a quebra das apurações
+WARNING:root:04/10/2022, 15:53:00 - Iniciado a apuração do ICMS / IPI / EFD
+WARNING:root:04/10/2022, 15:53:21 - Concluído a apuração do ICMS / IPI / EFD
+WARNING:root:04/10/2022, 15:53:21 - Iniciado a geração do Sped Fiscal
+WARNING:root:04/10/2022, 15:53:38 - Concluído a geração do Sped Fiscal
+WARNING:root:04/10/2022, 15:53:38 - Iniciado a comparação de arquivos
+WARNING:root:04/10/2022, 15:53:38 - ERRO - O arquivo está diferente. Favor consultar C:\GitHub\Auto_TGC\Automacao\Escrita_Fiscal\Geracao_De_Informacoes_Oficiais\SPED_Fiscal\108805\Difer.txt
+WARNING:root:04/10/2022, 15:53:38 - Interrompido os testes sobre o cenário 108805, verificar LOG acima

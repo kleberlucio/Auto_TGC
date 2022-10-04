@@ -4,6 +4,7 @@ Pacotes que devem ser instalados, além dos apresentados abaixo, devido a depend
 pip install opencv-python
 """
 
+from ast import Return
 from datetime import datetime
 from operator import truediv
 from winreg import *
@@ -17,7 +18,7 @@ import pyautogui
 import logging
 import sys
 
-def ExisteImagem(Imagem):
+def ExisteImagem(Imagem,Aguarda):
     """
     Criação: 28/09/2022 Última Revisão 28/09/2022 Último Autor: Kleber
     Imagem = Informe o nome da imagem a ser pesquisada na tela
@@ -29,7 +30,13 @@ def ExisteImagem(Imagem):
     os.chdir(DirImg)
     time.sleep(1)
     #Verifica se a imagem existe ou não na tela
-    if not ( pyautogui.locateCenterOnScreen(Imagem, confidence=0.9) ):
+    TempoLimite = 0
+    while not pyautogui.locateCenterOnScreen(Imagem, confidence=0.9):
+        time.sleep(1)
+        TempoLimite = TempoLimite + 1
+        if TempoLimite > Aguarda:
+            break          
+    if TempoLimite > Aguarda:
         os.chdir(DirAtu)
         return False
     else:
@@ -118,6 +125,10 @@ def SelecionaEmpresa(CodigoEmpresa,TelaCertificado):
                       de teste não apareça essa tela.
     """
     GeraLog(False,"Iniciado a Seleção da empresa")
+    #Verificando se o sistema foi aberto para selecionar a empresa
+    if not ExisteImagem('SelecaoEmpresa.png',1):
+        GeraLog(False,"ERRO - Não abriu a tela para selecionar a empresa")
+        return False
     #Diretório atual
     DirAtu = os.getcwd()
     #Diretório onde está a imagem a ser pesquisada
@@ -138,6 +149,7 @@ def SelecionaEmpresa(CodigoEmpresa,TelaCertificado):
     #Volta para o diretório atual.
     os.chdir(DirAtu)
     GeraLog(False,"Concluída a Seleção da empresa")
+    return True
 
 def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano,MensagemPendencia):
     """
@@ -181,7 +193,7 @@ def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano,MensagemPendencia):
     #Volta para o diretório atual.
     os.chdir(DirAtu)
     GeraLog(False,"Concluído a Seleção do período")
-
+    
 def GeraLog(apagarDadosLog, TextoDoLog):
     """
     Criação: 27/09/2022 Última Revisão 27/09/2022 Último Autor: Kleber

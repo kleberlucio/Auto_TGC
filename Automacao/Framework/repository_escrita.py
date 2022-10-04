@@ -20,7 +20,7 @@ def GeraSpedFiscal(TempoConclusao):
     time.sleep(3)
     pyautogui.press('f11')
     time.sleep(TempoConclusao)
-    if not ExisteImagem('SpedFiscalGeraldoComSucesso.png'):
+    if not ExisteImagem('SpedFiscalGeraldoComSucesso.png',1):
         GeraLog(False,"ERRO - A geração não concluiu da forma esperada")
         return False
     pyautogui.press(['enter','esc'])
@@ -52,7 +52,7 @@ def ApuraICMS_IPI_EFD(TempoAbertura,TempoConclusao,FicaNaTela):
         #Saindo da opção
         pyautogui.press('esc')
         time.sleep(1)
-        if not ExisteImagem('RetornoOKparaMenuPrincipal.png'):
+        if not ExisteImagem('RetornoOKparaMenuPrincipal.png',1):
             GeraLog(False,"ERRO - Ocorreu algo não esperado após a apuração")
             return False
     GeraLog(False,"Concluído a apuração do ICMS / IPI / EFD")
@@ -78,7 +78,7 @@ def QuebraApuracaoEscrita(Mes,Ano):
     pyautogui.press('enter')
     pyautogui.typewrite('1')
     pyautogui.press(['enter','f11'])
-    if not ExisteImagem('ConfirmacaoDeQuebraApuracaoICMSIPI.png'):
+    if not ExisteImagem('ConfirmacaoDeQuebraApuracaoICMSIPI.png',1):
         GeraLog(False,"ERRO - Não foi apresentada tela sobre quebra de apuração")
         return False
     pyautogui.press(['s','del','s','esc'])
