@@ -20,12 +20,7 @@ def GeraSpedFiscal(TempoConclusao):
     time.sleep(3)
     pyautogui.press('f11')
     time.sleep(TempoConclusao)
-<<<<<<< Updated upstream
     if not ExisteImagem('SpedFiscalGeraldoComSucesso.png',1):
-=======
-    
-    if not ExisteImagem('SpedFiscalGeraldoComSucesso.png'):
->>>>>>> Stashed changes
         GeraLog(False,"ERRO - A geração não concluiu da forma esperada")
         return False
     
@@ -72,7 +67,7 @@ def QuebraApuracaoEscrita(Mes,Ano):
     Ano = Ano selecionado. Exemplo: '2017'
     """
     GeraLog(False,"Iniciado a quebra das apurações")
-    pyautogui.click(815,291)
+    pyautogui.click(815, 291)
     pyautogui.press(['alt','m','0','5'])
     time.sleep(3)
     pyautogui.press('insert')
