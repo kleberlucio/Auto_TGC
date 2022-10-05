@@ -14,16 +14,22 @@ def GeraSpedFiscal(TempoConclusao):
     Método para realizar a geração do arquivo de SPED Fiscal da Escrita Fiscal
     TempoConclusao = informe em segundos, o tempo que leva para terminar a geração do arquivo
     """
-    GeraLog(False,"Iniciado a geração do Sped Fiscal")
+    GeraLog(False, "Iniciado a geração do Sped Fiscal")
     pyautogui.click(815,291)
     pyautogui.press(['alt','g','0','9'])
     time.sleep(3)
     pyautogui.press('f11')
     time.sleep(TempoConclusao)
+<<<<<<< Updated upstream
     if not ExisteImagem('SpedFiscalGeraldoComSucesso.png',1):
+=======
+    
+    if not ExisteImagem('SpedFiscalGeraldoComSucesso.png'):
+>>>>>>> Stashed changes
         GeraLog(False,"ERRO - A geração não concluiu da forma esperada")
         return False
-    pyautogui.press(['enter','esc'])
+    
+    pyautogui.press(['enter', 'esc'])
     GeraLog(False,"Concluído a geração do Sped Fiscal")
     return True
 
@@ -35,7 +41,7 @@ def ApuraICMS_IPI_EFD(TempoAbertura,TempoConclusao,FicaNaTela):
     TempoConclusao = informe em segundos, o tempo que leva para terminar a apuração
     FicaNaTela = informe True se deseja permanecer com a tela aberta, caso queira realizar algum outro teste ou False, se já querer sair
     """
-    GeraLog(False,"Iniciado a apuração do ICMS / IPI / EFD")
+    GeraLog(False, "Iniciado a apuração do ICMS / IPI / EFD")
     #Clica no meio da tela
     pyautogui.click(815,291)
     #Acessa a opção de apuração
