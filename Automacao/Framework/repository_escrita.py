@@ -15,7 +15,7 @@ def GeraSpedFiscal(TempoConclusao):
     TempoConclusao = informe em segundos, o tempo que leva para terminar a geração do arquivo
     """
     GeraLog(False, "Iniciado a geração do Sped Fiscal")
-    pyautogui.click(815,291)
+    pyautogui.click(815, 291)
     pyautogui.press(['alt','g','0','9'])
     time.sleep(3)
     pyautogui.press('f11')
@@ -38,7 +38,7 @@ def ApuraICMS_IPI_EFD(TempoAbertura,TempoConclusao,FicaNaTela):
     """
     GeraLog(False, "Iniciado a apuração do ICMS / IPI / EFD")
     #Clica no meio da tela
-    pyautogui.click(815,291)
+    pyautogui.click(815, 291)
     #Acessa a opção de apuração
     pyautogui.press(['alt','m','1','5'])
     #Aguarda a abertura da opção
@@ -66,7 +66,7 @@ def QuebraApuracaoEscrita(Mes,Ano):
     Mes = Mes selecionado. Exemplo: '04'
     Ano = Ano selecionado. Exemplo: '2017'
     """
-    GeraLog(False,"Iniciado a quebra das apurações")
+    GeraLog(False, "Iniciado a quebra das apurações")
     pyautogui.click(815, 291)
     pyautogui.press(['alt','m','0','5'])
     time.sleep(3)
@@ -83,6 +83,6 @@ def QuebraApuracaoEscrita(Mes,Ano):
         GeraLog(False,"ERRO - Não foi apresentada tela sobre quebra de apuração")
         return False
     pyautogui.press(['s','del','s','esc'])
-    pyautogui.click(815,291)
+    pyautogui.click(815, 291)
     GeraLog(False,"Concluído a quebra das apurações")
     return True 
