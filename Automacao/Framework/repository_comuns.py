@@ -30,7 +30,6 @@ def ExisteImagem(Imagem,Aguarda):
     #Acessa diretório da imagem
     os.chdir(DirImg)
     time.sleep(1)
-<<<<<<< Updated upstream
     #Verifica se a imagem existe ou não na tela
     TempoLimite = 0
     while not pyautogui.locateCenterOnScreen(Imagem, confidence=0.9):
@@ -39,10 +38,6 @@ def ExisteImagem(Imagem,Aguarda):
         if TempoLimite > Aguarda:
             break          
     if TempoLimite > Aguarda:
-=======
-    
-    if not ( pyautogui.locateCenterOnScreen(Imagem, confidence=0.9) ):
->>>>>>> Stashed changes
         os.chdir(DirAtu)
         return False
     else:
@@ -472,7 +467,7 @@ def PreparaAmbiente(Redmine, IniciaIntegrador, ModuloSis):
         pyautogui.hotkey('alt','c')
 
         #Ativando o integrador, precionando a sequencia de teclas abaixo.
-        pyautogui.press(['a','s','enter','s','esc'])
+        pyautogui.press(['a', 's', 'enter', 's', 'esc'])
 
         #Iniciando o Tron Integrador
         os.system('net start TronIntegradorSvc')
