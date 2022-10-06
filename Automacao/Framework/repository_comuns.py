@@ -16,7 +16,6 @@ import glob
 import time
 import pyautogui
 import logging
-import sys
 
 def ExisteImagem(Imagem,Aguarda):
     """
@@ -235,15 +234,15 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
         time.sleep(3)        
 
     #Colhendo dados sobre o serviço do Firebird para testes
-    service = psutil.win_service_get('FirebirdServerTGCTRON')
+    service = psutil.win_service_get('FirebirdServerTGCTRONC')
     service = service.as_dict()
 
     #Pedindo para parar o serviço
     if (service and service['status'] == 'running'):
-        os.system('net stop FirebirdServerTGCTRON')
+        os.system('net stop FirebirdServerTGCTRONC')
 
     #Colhendo dados atualizados sobre o serviço do Firebird para testes
-    service = psutil.win_service_get('FirebirdServerTGCTRON')
+    service = psutil.win_service_get('FirebirdServerTGCTRONC')
     service = service.as_dict()
 
     #Verificando, caso o serviço ainda esteja rodando, tenho que parar a execução da função
@@ -370,10 +369,10 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
         return False
 
     #Iniciando o Firebird
-    os.system('net start FirebirdServerTGCTRON')
+    os.system('net start FirebirdServerTGCTRONC')
 
     #Colhendo dados sobre o serviço do Firebird para testes
-    service = psutil.win_service_get('FirebirdServerTGCTRON')
+    service = psutil.win_service_get('FirebirdServerTGCTRONC')
     service = service.as_dict()
 
     #Verificando se o serviço do Firebird foi iniciado. Caso contrário, tenho que parar a execução da função

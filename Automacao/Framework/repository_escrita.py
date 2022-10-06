@@ -5,8 +5,6 @@ pip install opencv-python
 """
 
 from repository_comuns import *
-import time
-import pyautogui
 
 def GeraSpedFiscal(TempoConclusao):
     """"
