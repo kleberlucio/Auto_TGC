@@ -233,6 +233,20 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
         os.system('taskkill /IM ' + ModuloSis[1:] + '.exe /F')        
         time.sleep(3)        
 
+    #Excluindo arquivos XML de LOG de banco
+    fileList = glob.glob('C:/Program Files (x86)/Tron/*.xml')
+    for filePath in fileList:
+        os.remove(filePath)
+
+    #Verificando se os arquivos foram de fato excluidos. Caso contrário, tenho que parar a execução da função
+    TemXML = False
+    fileList = glob.glob('C:/Program Files (x86)/Tron/*.xml')
+    for filePath in fileList:
+        TemXML = True
+    if TemXML:
+        GeraLog(False,"ERRO - Não foi possível excluir todos os XML de LOG de banco")
+        return False
+
     #Colhendo dados sobre o serviço do Firebird para testes
     service = psutil.win_service_get('FirebirdServerTGCTRONC')
     service = service.as_dict()
