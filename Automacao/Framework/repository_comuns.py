@@ -16,7 +16,6 @@ import glob
 import time
 import pyautogui
 import logging
-import sys
 
 def ExisteImagem(Imagem,Aguarda):
     """
@@ -24,24 +23,19 @@ def ExisteImagem(Imagem,Aguarda):
     Imagem = Informe o nome da imagem a ser pesquisada na tela
     Aguarda = Informe o tempo que deseja aguardar para a abertura da tela
     """    
-    DirAtu = os.getcwd()
-    #Diretório onde está a imagem a ser pesquisada
-    DirImg = "C:\GitHub\Auto_TGC\Automacao\Framework\img"
-    #Acessa diretório da imagem
-    os.chdir(DirImg)
-    time.sleep(1)
-    #Verifica se a imagem existe ou não na tela
     TempoLimite = 0
-    while not pyautogui.locateCenterOnScreen(Imagem, confidence=0.9):
+    while not pyautogui.locateCenterOnScreen('C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\img\\' + Imagem, confidence=0.9):
         time.sleep(1)
         TempoLimite = TempoLimite + 1
         if TempoLimite > Aguarda:
             break          
-    if TempoLimite > Aguarda:
-        os.chdir(DirAtu)
+    if not ( pyautogui.locateCenterOnScreen('C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\img\\' + Imagem, confidence=0.9) ):
+        now = datetime.now()
+        TelaNoMomento = now.strftime("%d/%m/%Y, %H:%M:%S" + " - Diferenca sobre a tela " + Imagem )
+        im1 = pyautogui.screenshot()
+        #im1.save(r"c:\GitHub\Auto_TGC\Automacao\Framework\img_Erro\" + TelaNoMomento)
         return False
     else:
-        os.chdir(DirAtu)
         return True
 
 def VerificaEmpresaPeriodoSelecionado(Empresa,Mes,Ano):
@@ -52,9 +46,10 @@ def VerificaEmpresaPeriodoSelecionado(Empresa,Mes,Ano):
     Ano = Informe o ano selecionado. Exemplo: '2020'
     """    
     GeraLog(False,"Iniciado a verificação da empresa, mês e ano selecionado")
-    aReg = winreg.ConnectRegistry(None,HKEY_CURRENT_USER)
+    aReg = winreg.ConnectRegistry(None, HKEY_CURRENT_USER)
     aKey = winreg.OpenKey(aReg,r"SOFTWARE\Tron\Selecionado")
     Passou = True
+    
     try:
         i = 0
         while 1:
@@ -73,7 +68,8 @@ def VerificaEmpresaPeriodoSelecionado(Empresa,Mes,Ano):
                 break
             i += 1
     except WindowsError:
-        GeraLog(False,"Finalizada a verificação da empresa, mês e ano selecionado")
+        GeraLog(False, "Finalizada a verificação da empresa, mês e ano selecionado")
+    
     CloseKey(aKey)
     return Passou
 
@@ -110,10 +106,12 @@ def ComparaArquivo(Arq1,Arq2,ArqDif):
     f1.close()                                       
     f2.close()
     flog.close()
+    
     #Se tiver encontrado diferença, vai criar no LOG geral a linha abaixo, pedindo para ir no LOG de diferença para ver o que houve.
     if TemDif:
        GeraLog(False,"ERRO - O arquivo está diferente. Favor consultar " + ArqDif)
        return False
+    
     GeraLog(False,"Concluído a comparação de arquivos")
     return True
 
@@ -130,14 +128,8 @@ def SelecionaEmpresa(CodigoEmpresa,TelaCertificado):
     if not ExisteImagem('SelecaoEmpresa.png',1):
         GeraLog(False,"ERRO - Não abriu a tela para selecionar a empresa")
         return False
-    #Diretório atual
-    DirAtu = os.getcwd()
-    #Diretório onde está a imagem a ser pesquisada
-    DirImg = "C:\GitHub\Auto_TGC\Automacao\Framework\img"
-    #Acessa diretório da imagem
-    os.chdir(DirImg)
     #Pesquisa a imagem no menu principal e clica no campo
-    pyautogui.click( pyautogui.locateCenterOnScreen('SelecaoEmpresa.png', confidence=0.9) ) 
+    pyautogui.click( pyautogui.locateCenterOnScreen('C:\GitHub\Auto_TGC\Automacao\Framework\img\SelecaoEmpresa.png', confidence=0.9) ) 
     #Vai para o início da lista de empresas
     pyautogui.hotkey('ctrl','home')
     #Escreve o código da empresa
@@ -147,8 +139,6 @@ def SelecionaEmpresa(CodigoEmpresa,TelaCertificado):
     time.sleep(2)
     if TelaCertificado:
         pyautogui.press('esc')
-    #Volta para o diretório atual.
-    os.chdir(DirAtu)
     GeraLog(False,"Concluída a Seleção da empresa")
     return True
 
@@ -162,23 +152,26 @@ def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano,MensagemPendencia):
                         os empregados. Informe True para que seja teclado ENTER na mensagem ou False caso seu ambiente
                         de teste não apresente esta mensagem.    
     """
-    GeraLog(False,"Iniciado a Seleção do período")
+    GeraLog(False, "Iniciado a Seleção do período")
     #Diretório atual
     DirAtu = os.getcwd()
     #Diretório onde está a imagem a ser pesquisada
-    DirImg = "C:\GitHub\Auto_TGC\Automacao\Framework\img"
+    DirImg = "C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\img"
     #Acessa diretório da imagem
     os.chdir(DirImg)
     #Rotina para clicar no Ano a ser selecionado
     VoltaAno = ( (AnoCriacaoScript - Ano) )
+    
     if VoltaAno == 1:
         VoltaAno = 0
     while VoltaAno > 0:
         pyautogui.click( pyautogui.locateCenterOnScreen('VoltaAno.png', confidence=0.9) )
         VoltaAno = VoltaAno - 1
+    
     #Rotina para clicar no Mês a ser selecionado
     Meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"]
     Cont = 0
+    
     for QualMes in Meses:
         Cont = Cont + 1
         if Cont == Mes:
@@ -187,8 +180,10 @@ def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano,MensagemPendencia):
             else:
                 pyautogui.doubleClick( pyautogui.locateCenterOnScreen(QualMes+'1.png', confidence=0.9) )
             break
+    
     if MensagemPendencia:
         pyautogui.press('enter')
+    
     #Clica no meio da tela para dar o foco
     pyautogui.click(815,291)
     #Volta para o diretório atual.
@@ -206,6 +201,7 @@ def GeraLog(apagarDadosLog, TextoDoLog):
     if (not os.path.exists("C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\LogAuto.txt")) or (apagarDadosLog==True): # se o arquivo não existir, ele cria um novo. Ou para limpar os arquivos. 
         f = open("C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\LogAuto.txt", "w")
         f.write("Inicio do Log\n\n") 
+    
     #Efetuando configurações iniciais sobre o arquivo de LOG
     logging.basicConfig(filename='C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\LogAuto.txt', 
                         filemode='a',
@@ -214,7 +210,7 @@ def GeraLog(apagarDadosLog, TextoDoLog):
     now = datetime.now() #pega a data atual           
     logging.warning(now.strftime("%d/%m/%Y, %H:%M:%S" + " - " + TextoDoLog)) # escreve no log
 
-def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
+def PreparaAmbiente(Redmine, IniciaIntegrador, ModuloSis):
     """
     Criação: 27/09/2022 Última Revisão 27/09/2022 Último Autor: Kleber
     Redmine = Informe o número da tarefa Redmine a ser automatizada. Esta informação é a pasta onde está o banco e demais arquivos que serão utilizados. Exemplo: '108855'
@@ -222,10 +218,11 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
     ModuloSis = Informe qual módulo receberá a automação. Exemplo: '\Folha.exe'
     """
     #Carregando o arquivo de log
-    GeraLog(False,"Iniciando a preparação do ambiente para testar a tarefa " + Redmine)
-
+    GeraLog(False, "Iniciando a preparação do ambiente para testar a tarefa " + Redmine)
+    
     #Verificando se o módulo está aberto, para poder fechá-lo
     ModuloEstaRodando = False
+    
     for p in psutil.process_iter(attrs=['pid', 'name']):
         if p.info['name'] == (ModuloSis[1:] + ".exe"):
            ModuloEstaRodando = True
@@ -234,16 +231,30 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
         os.system('taskkill /IM ' + ModuloSis[1:] + '.exe /F')        
         time.sleep(3)        
 
-    #Colhendo dados sobre o serviço do Firebird para testes
-    service = psutil.win_service_get('FirebirdServerTGCTRON')
-    service = service.as_dict()
+    #Excluindo arquivos XML de LOG de banco
+    fileList = glob.glob('C:/Program Files (x86)/Tron/*.xml')
+    for filePath in fileList:
+        os.remove(filePath)
 
+    #Verificando se os arquivos foram de fato excluidos. Caso contrário, tenho que parar a execução da função
+    TemXML = False
+    fileList = glob.glob('C:/Program Files (x86)/Tron/*.xml')
+    for filePath in fileList:
+        TemXML = True
+    if TemXML:
+        GeraLog(False,"ERRO - Não foi possível excluir todos os XML de LOG de banco")
+        return False
+
+    #Colhendo dados sobre o serviço do Firebird para testes
+    service = psutil.win_service_get('FirebirdServerTGCTRONC')
+    service = service.as_dict()
+    
     #Pedindo para parar o serviço
     if (service and service['status'] == 'running'):
-        os.system('net stop FirebirdServerTGCTRON')
-
+        os.system('net stop FirebirdServerTGCTRONC')
+    
     #Colhendo dados atualizados sobre o serviço do Firebird para testes
-    service = psutil.win_service_get('FirebirdServerTGCTRON')
+    service = psutil.win_service_get('FirebirdServerTGCTRONC')
     service = service.as_dict()
 
     #Verificando, caso o serviço ainda esteja rodando, tenho que parar a execução da função
@@ -265,16 +276,16 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
 
     #Caso o serviço ainda esteja rodando, tenho que parar a execução da função
     if (service and service['status'] == 'running'):
-        GeraLog(False,"ERRO - Não foi possível parar o serviço do Tron Integrador")
+        GeraLog(False, "ERRO - Não foi possível parar o serviço do Tron Integrador")
         return False
-
+    
     #Excluindo relatórios gerados pelo sistema
     if os.path.exists("C:\\Users\\Public\\Documents\\Report.pdf"):
         os.remove("C:\\Users\\Public\\Documents\\Report.pdf")
 
     #Verificando se o arquivo foi de fato excluido. Caso contrário, tenho que parar a execução da função
     if os.path.exists("C:\\Users\\Public\\Documents\\Report.pdf"):
-        GeraLog(False,"ERRO - Não foi possível excluir o arquivo Report.pdf")
+        GeraLog(False, "ERRO - Não foi possível excluir o arquivo Report.pdf")
         return False
 
     #Excluindo relatórios gerados pelo sistema
@@ -287,13 +298,14 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
         return False
 
     #Excluindo arquivos XML utilizados anteriormente
-    fileList = glob.glob('C:/Bancos/*.xml')
+    fileList = glob.glob('C:\\Bancos\\*.xml')
     for filePath in fileList:
         os.remove(filePath)
 
     #Verificando se os arquivos foram de fato excluidos. Caso contrário, tenho que parar a execução da função
     TemXML = False
-    fileList = glob.glob('C:/Bancos/*.xml')
+    fileList = glob.glob('C:\\Bancos\\*.xml')
+    
     for filePath in fileList:
         TemXML = True
     if TemXML:
@@ -301,13 +313,13 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
         return False
 
     #Excluindo arquivos TXT utilizados anteriormente
-    fileList = glob.glob('C:/Bancos/*.txt')
+    fileList = glob.glob('C:\\Bancos\\*.txt')
     for filePath in fileList:
         os.remove(filePath)
 
     #Verificando se os arquivos foram de fato excluidos. Caso contrário, tenho que parar a execução da função
     TemTXT = False
-    fileList = glob.glob('C:/Bancos/*.txt')
+    fileList = glob.glob('C:\\Bancos\\*.txt')
     for filePath in fileList:
         TemTXT = True
     if TemTXT:
@@ -344,20 +356,20 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
     #Excluindo o Atualiza.bin
     if os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.bin"):
         os.remove("C:\\Program Files (x86)\\Tron\Atualiza.bin")
-
+    
     #Excluindo o Atualiza.ban
     if os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.ban"):
         os.remove("C:\\Program Files (x86)\\Tron\Atualiza.ban")
 
     #Renomeando de OLD para BAN
-    fileList = glob.glob('C:/Program Files (x86)/Tron/*.old')
+    fileList = glob.glob('C:\\Program Files (x86)\\Tron\\*.old')
     for filePath in fileList:
-        os.rename(filePath,"C:/Program Files (x86)/Tron/Atualiza.ban")
+        os.rename(filePath,"C:\\Program Files (x86)\\Tron\\Atualiza.ban")
 
     #Renomeando de REL para BIN
-    fileList = glob.glob('C:/Program Files (x86)/Tron/*.rel')
+    fileList = glob.glob('C:\\Program Files (x86)\\Tron\\*.rel')
     for filePath in fileList:
-        os.rename(filePath,"C:/Program Files (x86)/Tron/Atualiza.bin")
+        os.rename(filePath,"C:\\Program Files (x86)\\Tron\\Atualiza.bin")
 
     #Verificando se existe o Atualiza.bin. Caso contrário, tenho que parar a execução da função
     if not os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.bin"):
@@ -370,25 +382,26 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
         return False
 
     #Iniciando o Firebird
-    os.system('net start FirebirdServerTGCTRON')
+    os.system('net start FirebirdServerTGCTRONC')
 
     #Colhendo dados sobre o serviço do Firebird para testes
-    service = psutil.win_service_get('FirebirdServerTGCTRON')
+    service = psutil.win_service_get('FirebirdServerTGCTRONC')
     service = service.as_dict()
 
     #Verificando se o serviço do Firebird foi iniciado. Caso contrário, tenho que parar a execução da função
     if not (service and service['status'] == 'running'):
-        GeraLog(False,"ERRO - Ocorreu falha ao tentar iniciar o Firebird")
+        GeraLog(False, "ERRO - Ocorreu falha ao tentar iniciar o Firebird")
         return False
-
+    
     #Chamando o módulo TGC
-    os.startfile("C:\Program Files (x86)\Tron" + ModuloSis + ModuloSis + ".exe")
+    os.startfile("C:\\Program Files (x86)\\Tron" + ModuloSis + ModuloSis + ".exe")
 
     #Aguardando a abertura do módulo
     time.sleep(10)
 
     #Verificando se o módulo está aberto. Caso contrário, tenho que parar a execução da função
     ModuloEstaRodando = False
+    
     for p in psutil.process_iter(attrs=['pid', 'name']):
         if p.info['name'] == (ModuloSis[1:] + ".exe"):
             ModuloEstaRodando = True
@@ -401,15 +414,17 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
     #Caso tenha arquivo XML na pasta TRON, deu LOG de banco
     TempoLimite = 0
     DeuLog = False
+    
     while os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.ban"):
         time.sleep(1)
         TempoLimite = TempoLimite + 1
         if TempoLimite > 600 or DeuLog:
             break          
-        fileList = glob.glob('C:/Program Files (x86)/tron/*.xml')
+        fileList = glob.glob('C:\\Program Files (x86)\\tron\\*.xml')
         for filePath in fileList:
             DeuLog = True
             break
+    
     if TempoLimite > 600:
         GeraLog(False,"ERRO - A estruturação do banco levou mais de 10 minutos.")
         return False
@@ -437,7 +452,7 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
     if IniciaIntegrador:
 
         #Chamando o Tron Integrador
-        os.startfile("C:\Program Files (x86)\Tron\TronIntegrador\Tron.Integrador.exe")
+        os.startfile("C:\\Program Files (x86)\\Tron\\TronIntegrador\\Tron.Integrador.exe")
 
         #Aguardando a abertura do Integrador
         time.sleep(2)
@@ -466,6 +481,6 @@ def PreparaAmbiente(Redmine,IniciaIntegrador,ModuloSis):
     GeraLog(False,"Preparação do Ambiente finalizada")
 
     #Chamando o módulo TGC
-    os.startfile("C:\Program Files (x86)\Tron" + ModuloSis + ModuloSis + ".exe")
+    os.startfile("C:\\Program Files (x86)\\Tron" + ModuloSis + ModuloSis + ".exe")
     time.sleep(10)
     return True
