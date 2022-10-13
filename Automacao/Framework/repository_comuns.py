@@ -30,10 +30,9 @@ def ExisteImagem(Imagem,Aguarda):
         if TempoLimite > Aguarda:
             break          
     if not ( pyautogui.locateCenterOnScreen('C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\img\\' + Imagem, confidence=0.9) ):
-        now = datetime.now()
-        TelaNoMomento = now.strftime("%d/%m/%Y, %H:%M:%S" + " - Diferenca sobre a tela " + Imagem )
-        im1 = pyautogui.screenshot()
-        #im1.save(r"c:\GitHub\Auto_TGC\Automacao\Framework\img_Erro\" + TelaNoMomento)
+        TelaNoMomento = "Diferenca sobre a imagem " + Imagem 
+        ImagemDaTelaAtual = pyautogui.screenshot()
+        ImagemDaTelaAtual.save(r'c:\GitHub\Auto_TGC\Automacao\Framework\img_Erro\' + TelaNoMomento')
         return False
     else:
         return True
