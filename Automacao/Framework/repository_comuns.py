@@ -23,29 +23,19 @@ def ExisteImagem(Imagem,Aguarda):
     Imagem = Informe o nome da imagem a ser pesquisada na tela
     Aguarda = Informe o tempo que deseja aguardar para a abertura da tela
     """    
-    DirAtu = os.getcwd()
-    #Diretório onde está a imagem a ser pesquisada
-    DirImg = "C:\\GitHub\\Auto_TGC\\Automacao\\Framework\img"
-    #Acessa diretório da imagem
-    os.chdir(DirImg)
-    time.sleep(1)
-<<<<<<< Updated upstream
-    #Verifica se a imagem existe ou não na tela
     TempoLimite = 0
-    while not pyautogui.locateCenterOnScreen(Imagem, confidence=0.9):
+    while not pyautogui.locateCenterOnScreen('C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\img\\' + Imagem, confidence=0.9):
         time.sleep(1)
         TempoLimite = TempoLimite + 1
         if TempoLimite > Aguarda:
             break          
-    if TempoLimite > Aguarda:
-=======
-    
-    if not ( pyautogui.locateCenterOnScreen(Imagem, confidence=0.9) ):
->>>>>>> Stashed changes
-        os.chdir(DirAtu)
+    if not ( pyautogui.locateCenterOnScreen('C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\img\\' + Imagem, confidence=0.9) ):
+        now = datetime.now()
+        TelaNoMomento = now.strftime("%d/%m/%Y, %H:%M:%S" + " - Diferenca sobre a tela " + Imagem )
+        im1 = pyautogui.screenshot()
+        #im1.save(r"c:\GitHub\Auto_TGC\Automacao\Framework\img_Erro\" + TelaNoMomento)
         return False
     else:
-        os.chdir(DirAtu)
         return True
 
 def VerificaEmpresaPeriodoSelecionado(Empresa,Mes,Ano):
@@ -138,14 +128,8 @@ def SelecionaEmpresa(CodigoEmpresa,TelaCertificado):
     if not ExisteImagem('SelecaoEmpresa.png',1):
         GeraLog(False,"ERRO - Não abriu a tela para selecionar a empresa")
         return False
-    #Diretório atual
-    DirAtu = os.getcwd()
-    #Diretório onde está a imagem a ser pesquisada
-    DirImg = "C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\img"
-    #Acessa diretório da imagem
-    os.chdir(DirImg)
     #Pesquisa a imagem no menu principal e clica no campo
-    pyautogui.click( pyautogui.locateCenterOnScreen('SelecaoEmpresa.png', confidence=0.9) ) 
+    pyautogui.click( pyautogui.locateCenterOnScreen('C:\GitHub\Auto_TGC\Automacao\Framework\img\SelecaoEmpresa.png', confidence=0.9) ) 
     #Vai para o início da lista de empresas
     pyautogui.hotkey('ctrl','home')
     #Escreve o código da empresa
@@ -153,12 +137,8 @@ def SelecionaEmpresa(CodigoEmpresa,TelaCertificado):
     #Tecla enter
     pyautogui.press('enter')
     time.sleep(2)
-    
     if TelaCertificado:
         pyautogui.press('esc')
-    
-    #Volta para o diretório atual.
-    os.chdir(DirAtu)
     GeraLog(False,"Concluída a Seleção da empresa")
     return True
 
@@ -250,7 +230,6 @@ def PreparaAmbiente(Redmine, IniciaIntegrador, ModuloSis):
     if  ModuloEstaRodando:
         os.system('taskkill /IM ' + ModuloSis[1:] + '.exe /F')        
         time.sleep(3)        
-<<<<<<< HEAD
 
     #Excluindo arquivos XML de LOG de banco
     fileList = glob.glob('C:/Program Files (x86)/Tron/*.xml')
@@ -268,23 +247,12 @@ def PreparaAmbiente(Redmine, IniciaIntegrador, ModuloSis):
 
     #Colhendo dados sobre o serviço do Firebird para testes
     service = psutil.win_service_get('FirebirdServerTGCTRONC')
-=======
-    
-    #Colhendo dados sobre o serviço do Firebird para testes
-    #service = psutil.win_service_get('FirebirdServerTGCTRON')
-    service = psutil.win_service_get('FirebirdServerDefaultInstance')
->>>>>>> 36a9a55f1089ce7ec2a3c16a3ff4f7087da1e11e
     service = service.as_dict()
     
     #Pedindo para parar o serviço
     if (service and service['status'] == 'running'):
-<<<<<<< HEAD
         os.system('net stop FirebirdServerTGCTRONC')
-
-=======
-        os.system('net stop FirebirdServerTGCTRON')
     
->>>>>>> 36a9a55f1089ce7ec2a3c16a3ff4f7087da1e11e
     #Colhendo dados atualizados sobre o serviço do Firebird para testes
     service = psutil.win_service_get('FirebirdServerTGCTRONC')
     service = service.as_dict()
