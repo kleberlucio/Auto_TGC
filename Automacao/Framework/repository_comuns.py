@@ -17,6 +17,35 @@ import time
 import pyautogui
 import logging
 
+def ExcluiProcesso(Processo):
+    """
+    Criação: 13/10/2022 Última Revisão 13/10/2022 Último Autor: Kleber
+    Processo = Informe o nome do processo windows que deseja encerrar. Exemplo: Folha.exe
+    """    
+    #Verificando se o módulo está aberto, para poder fechá-lo
+    ModuloEstaRodando = False
+    
+    for p in psutil.process_iter(attrs=['pid', 'name']):
+        if p.info['name'] == (Processo + ".exe"):
+           ModuloEstaRodando = True
+           break
+    if  ModuloEstaRodando:
+        os.system('taskkill /IM ' + Processo + '.exe /F')        
+        time.sleep(3)        
+
+    ModuloEstaRodando = False
+    
+    for p in psutil.process_iter(attrs=['pid', 'name']):
+        if p.info['name'] == (Processo + ".exe"):
+           ModuloEstaRodando = True
+           break
+    if  ModuloEstaRodando:
+        GeraLog(False, "O processo " + Processo + " não foi encerrado.")
+        return False
+    else:
+        return True
+
+
 def ExisteImagem(Imagem,Aguarda):
     """
     Criação: 28/09/2022 Última Revisão 28/09/2022 Último Autor: Kleber
@@ -28,7 +57,8 @@ def ExisteImagem(Imagem,Aguarda):
         time.sleep(1)
         TempoLimite = TempoLimite + 1
         if TempoLimite > Aguarda:
-            break          
+            GeraLog("O tempo para aguardar a tela ser apresentada foi superior ao esperado",False)
+            break       
     if not ( pyautogui.locateCenterOnScreen('C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\img\\' + Imagem, confidence=0.9) ):
         TelaNoMomento = "Diferenca sobre a imagem " + Imagem 
         ImagemDaTelaAtual = pyautogui.screenshot()
@@ -218,17 +248,10 @@ def PreparaAmbiente(Redmine, IniciaIntegrador, ModuloSis):
     """
     #Carregando o arquivo de log
     GeraLog(False, "Iniciando a preparação do ambiente para testar a tarefa " + Redmine)
-    
+
     #Verificando se o módulo está aberto, para poder fechá-lo
-    ModuloEstaRodando = False
-    
-    for p in psutil.process_iter(attrs=['pid', 'name']):
-        if p.info['name'] == (ModuloSis[1:] + ".exe"):
-           ModuloEstaRodando = True
-           break
-    if  ModuloEstaRodando:
-        os.system('taskkill /IM ' + ModuloSis[1:] + '.exe /F')        
-        time.sleep(3)        
+    if not ExcluiProcesso(ModuloSis[1:]):
+        return False
 
     #Excluindo arquivos XML de LOG de banco
     fileList = glob.glob('C:/Program Files (x86)/Tron/*.xml')
@@ -431,20 +454,8 @@ def PreparaAmbiente(Redmine, IniciaIntegrador, ModuloSis):
     if DeuLog:
         GeraLog(False,"ATENCAO - Ocorreu LOG de banco após a restruturação. Acionar DBA.")
     
-    #Encerrando o módulo
-    os.system('taskkill /IM ' + ModuloSis[1:] + '.exe /F')
-
-    #Aguardando o processo ser fechado definitivamente
-    time.sleep(3)
-
-    #Verificando se o módulo está aberto. Caso contrário, tenho que parar a execução da função
-    ModuloEstaRodando = False
-    for p in psutil.process_iter(attrs=['pid', 'name']):
-        if p.info['name'] == (ModuloSis[1:] + ".exe"):
-            ModuloEstaRodando = True
-            break
-    if  ModuloEstaRodando:
-        GeraLog(False,"ERRO - O processo " + ModuloSis[1:] + ".exe ainda está rodando")
+    #Verificando se o módulo está aberto, para poder fechá-lo
+    if not ExcluiProcesso(ModuloSis[1:]):
         return False
 
     #Iniciando o processo do Tron Integrador
