@@ -16,15 +16,15 @@ import logging
 def ExcluiProcesso(Processo):
     """
     Criação: 13/10/2022 Última Revisão 13/10/2022 Último Autor: Kleber
-    Processo = Informe o nome do processo windows que deseja encerrar. Exemplo: Folha
+    Processo = Informe o nome do processo windows que deseja encerrar. Exemplo: Folha.exe
     """
     try:    
         #Verificando se o processo está aberto, para poder fechá-lo
         ModuloEstaRodando = False 
         for p in psutil.process_iter(attrs=['pid', 'name']):
-            if p.info['name'] == (Processo + ".exe"):
-                ModuloEstaRodando = True
-            break
+            if p.info['name'] == (Processo + '.exe'):
+               ModuloEstaRodando = True
+               break
         #Se o processo estiver aberto, neste momento vai encerrar    
         if  ModuloEstaRodando:
             os.system('taskkill /IM ' + Processo + '.exe /F')        
@@ -32,12 +32,12 @@ def ExcluiProcesso(Processo):
         #Confere se de fato o processo foi encerrado
         ModuloEstaRodando = False    
         for p in psutil.process_iter(attrs=['pid', 'name']):
-            if p.info['name'] == (Processo + ".exe"):
-                ModuloEstaRodando = True
-            break
+            if p.info['name'] == (Processo + '.exe'):
+               ModuloEstaRodando = True
+               break
         #Abaixo, caso ainda esteja rodando, o processo de execução desta automação será interrompido       
         if  ModuloEstaRodando:
-            GeraLog(False, "O processo " + Processo + " não foi encerrado.")
+            GeraLog(False, "O processo " + Processo + ".exe não foi encerrado.")
             return False
     except:
         GeraLog(False, "Ocorreu um erro de exceção no método ExcluiProcesso")
@@ -160,7 +160,7 @@ def SelecionaEmpresa(CodigoEmpresa,TelaCertificado):
     try:
         GeraLog(False,"Iniciado a Seleção da empresa")
         #Verificando se o sistema foi aberto para selecionar a empresa
-        if not ExisteImagem('C:\GitHub\Auto_TGC\Automacao\Framework\img\SelecaoEmpresa.png',10):
+        if not ExisteImagem('C:\GitHub\Auto_TGC\Automacao\Framework\img\SelecaoEmpresa.png',20):
             GeraLog(False,"ERRO - Não abriu a tela para selecionar a empresa")
             return False
         #Pesquisa a imagem no menu principal e clica no campo
@@ -194,7 +194,7 @@ def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano,MensagemPendencia,TemPendencia):
     #Diretório atual
     DirAtu = os.getcwd()
     #Diretório onde está a imagem a ser pesquisada
-    DirImg = "C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\img"
+    DirImg = "C:\GitHub\Auto_TGC\Automacao\Framework\img"
     #Acessa diretório da imagem
     os.chdir(DirImg)
     #Rotina para clicar no Ano a ser selecionado
@@ -504,5 +504,5 @@ def PreparaAmbiente(Redmine, IniciaIntegrador, ModuloSis):
 
     #Chamando o módulo TGC
     os.startfile("C:\\Program Files (x86)\\Tron" + ModuloSis + ModuloSis + ".exe")
-    time.sleep(10)
+    time.sleep(25)
     return True

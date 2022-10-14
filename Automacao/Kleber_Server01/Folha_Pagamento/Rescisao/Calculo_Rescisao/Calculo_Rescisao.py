@@ -25,6 +25,6 @@ def Redmine_105():
         GeraLog(False, "Interrompido os testes sobre o cenário 100000, verificar LOG acima")
     return True
 
-pyautogui.click(1779,29)
-SelecionaEmpresa(13,True)
-#Redmine_105()
+#pyautogui.click(1779,29)
+#SelecionaEmpresa(13,True)
+Redmine_105()
