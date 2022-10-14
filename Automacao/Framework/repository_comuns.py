@@ -149,22 +149,23 @@ def ComparaArquivo(Arq1,Arq2,ArqDif):
     GeraLog(False,"Concluído a comparação de arquivos")
     return True
 
-def SelecionaEmpresa(CodigoEmpresa,TelaCertificado):
+def SelecionaEmpresa(CodigoEmpresa,TelaCertificado,Modulo):
     """
     Criação: 27/09/2022 Última Revisão 27/09/2022 Último Autor: Kleber
     CodigoEmpresa = Informe o código da empresa a ser selecionada. Exemplo: 21
     TelaCertificado = Após informar o código da empresa, pode ser que apareça a tela de certificados
                       vencidos. Informe True para dar um ESC nesta tela ou False caso o seu ambiente
                       de teste não apareça essa tela.
+    Modulo = Informe qual é o sistema que está sendo acessado
     """
     try:
         GeraLog(False,"Iniciado a Seleção da empresa")
         #Verificando se o sistema foi aberto para selecionar a empresa
-        if not ExisteImagem('C:\GitHub\Auto_TGC\Automacao\Framework\img\SelecaoEmpresa.png',20):
+        if not ExisteImagem('C:\GitHub\Auto_TGC\Automacao\Framework\img\SelecaoEmpresa' + Modulo + '.png',5):
             GeraLog(False,"ERRO - Não abriu a tela para selecionar a empresa")
             return False
         #Pesquisa a imagem no menu principal e clica no campo
-        pyautogui.click( pyautogui.locateCenterOnScreen('C:\GitHub\Auto_TGC\Automacao\Framework\img\SelecaoEmpresa.png', confidence=0.9) ) 
+        pyautogui.click( pyautogui.locateCenterOnScreen('C:\GitHub\Auto_TGC\Automacao\Framework\img\SelecaoEmpresa' + Modulo + '.png', confidence=0.9) ) 
         #Vai para o início da lista de empresas
         pyautogui.hotkey('ctrl','home')
         #Escreve o código da empresa
@@ -504,5 +505,5 @@ def PreparaAmbiente(Redmine, IniciaIntegrador, ModuloSis):
 
     #Chamando o módulo TGC
     os.startfile("C:\\Program Files (x86)\\Tron" + ModuloSis + ModuloSis + ".exe")
-    time.sleep(25)
+    time.sleep(20)
     return True
