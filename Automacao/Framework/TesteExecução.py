@@ -2,8 +2,6 @@ from repository_comuns import *
 from repository_escrita import *
 import sys
 
-#pyautogui.click(1803,16)
-
 try:
     if not PreparaAmbiente('108805', False, '\Escrita'):
         sys.exit(1)
