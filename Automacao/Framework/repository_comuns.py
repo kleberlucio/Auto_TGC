@@ -1,8 +1,4 @@
-"""
-O Visual Studio Code deve ser acessado como administrador
-Pacotes que devem ser instalados, além dos apresentados abaixo, devido a dependências:
-pip install opencv-python
-"""
+#O Visual Studio Code deve ser acessado como administrador
 
 from ast import Return
 from datetime import datetime
@@ -21,51 +17,58 @@ def ExcluiProcesso(Processo):
     """
     Criação: 13/10/2022 Última Revisão 13/10/2022 Último Autor: Kleber
     Processo = Informe o nome do processo windows que deseja encerrar. Exemplo: Folha.exe
-    """    
-    #Verificando se o módulo está aberto, para poder fechá-lo
-    ModuloEstaRodando = False
-    
-    for p in psutil.process_iter(attrs=['pid', 'name']):
-        if p.info['name'] == (Processo + ".exe"):
-           ModuloEstaRodando = True
-           break
-    if  ModuloEstaRodando:
-        os.system('taskkill /IM ' + Processo + '.exe /F')        
-        time.sleep(3)        
-
-    ModuloEstaRodando = False
-    
-    for p in psutil.process_iter(attrs=['pid', 'name']):
-        if p.info['name'] == (Processo + ".exe"):
-           ModuloEstaRodando = True
-           break
-    if  ModuloEstaRodando:
-        GeraLog(False, "O processo " + Processo + " não foi encerrado.")
-        return False
-    else:
-        return True
-
+    """
+    try:    
+        #Verificando se o processo está aberto, para poder fechá-lo
+        ModuloEstaRodando = False 
+        for p in psutil.process_iter(attrs=['pid', 'name']):
+            if p.info['name'] == (Processo + '.exe'):
+               ModuloEstaRodando = True
+               break
+        #Se o processo estiver aberto, neste momento vai encerrar    
+        if  ModuloEstaRodando:
+            os.system('taskkill /IM ' + Processo + '.exe /F')        
+            time.sleep(3)        
+        #Confere se de fato o processo foi encerrado
+        ModuloEstaRodando = False    
+        for p in psutil.process_iter(attrs=['pid', 'name']):
+            if p.info['name'] == (Processo + '.exe'):
+               ModuloEstaRodando = True
+               break
+        #Abaixo, caso ainda esteja rodando, o processo de execução desta automação será interrompido       
+        if  ModuloEstaRodando:
+            GeraLog(False, "O processo " + Processo + ".exe não foi encerrado.")
+            return False
+    except:
+        GeraLog(False, "Ocorreu um erro de exceção no método ExcluiProcesso")
+    return True            
 
 def ExisteImagem(Imagem,Aguarda):
     """
     Criação: 28/09/2022 Última Revisão 28/09/2022 Último Autor: Kleber
     Imagem = Informe o nome da imagem a ser pesquisada na tela
     Aguarda = Informe o tempo que deseja aguardar para a abertura da tela
-    """    
-    TempoLimite = 0
-    while not pyautogui.locateCenterOnScreen('C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\img\\' + Imagem, confidence=0.9):
-        time.sleep(1)
-        TempoLimite = TempoLimite + 1
-        if TempoLimite > Aguarda:
-            GeraLog("O tempo para aguardar a tela ser apresentada foi superior ao esperado",False)
-            break       
-    if not ( pyautogui.locateCenterOnScreen('C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\img\\' + Imagem, confidence=0.9) ):
-        TelaNoMomento = "Diferenca sobre a imagem " + Imagem 
-        ImagemDaTelaAtual = pyautogui.screenshot()
-        ImagemDaTelaAtual.save(r'c:\GitHub\Auto_TGC\Automacao\Framework\img_Erro\' + TelaNoMomento')
-        return False
-    else:
-        return True
+    """
+    try:    
+        TempoLimite = 0
+        #Fica dentro de um loop, aguardando pelo tempo definido em Aguarda, até que a imagem apareça
+        while not pyautogui.locateCenterOnScreen(Imagem, confidence=0.9):
+            time.sleep(1)
+            TempoLimite = TempoLimite + 1
+            #Se ultrapassar o tempo definido em Aguarda, não conseguiu encontrar a imagem
+            if TempoLimite > Aguarda:
+                GeraLog(False,"O tempo para aguardar a tela ser apresentada foi superior ao esperado")
+                break
+        #Se não encontrou a imagem, ele vai fazer um print da tela que está aberta no momento.           
+        if not ( pyautogui.locateCenterOnScreen(Imagem, confidence=0.9) ):
+            TelaNoMomento = "Diferenca sobre a imagem " + Imagem 
+            #ImagemDaTelaAtual = pyautogui.screenshot()
+            #print("passou 1")
+            #ImagemDaTelaAtual.save(r'c:\GitHub\Auto_TGC\Automacao\Framework\img_Erro\' + TelaNoMomento')    
+            return False
+    except:
+        GeraLog(False, "Ocorreu um erro de exceção no método ExisteImagem")
+    return True
 
 def VerificaEmpresaPeriodoSelecionado(Empresa,Mes,Ano):
     """
@@ -75,13 +78,14 @@ def VerificaEmpresaPeriodoSelecionado(Empresa,Mes,Ano):
     Ano = Informe o ano selecionado. Exemplo: '2020'
     """    
     GeraLog(False,"Iniciado a verificação da empresa, mês e ano selecionado")
+    #Pega dados do registro do Windows que possui estas informações
     aReg = winreg.ConnectRegistry(None, HKEY_CURRENT_USER)
     aKey = winreg.OpenKey(aReg,r"SOFTWARE\Tron\Selecionado")
-    Passou = True
-    
+    Passou = True    
     try:
         i = 0
         while 1:
+            #Procura na lista se existe os dados informados. Caso não seja, já vai gerar LOG de erro
             name, value, type = EnumValue(aKey, i)
             if name == 'Codigo' and not (Empresa == value):
                 GeraLog(False,"ERRO - Não selecionou a empresa correta")
@@ -98,7 +102,7 @@ def VerificaEmpresaPeriodoSelecionado(Empresa,Mes,Ano):
             i += 1
     except WindowsError:
         GeraLog(False, "Finalizada a verificação da empresa, mês e ano selecionado")
-    
+    #Fecha a coneção 
     CloseKey(aKey)
     return Passou
 
@@ -108,70 +112,76 @@ def ComparaArquivo(Arq1,Arq2,ArqDif):
     Arq1 = Caminho e nome do arquivo que está guardado. Exemplo: "C:/GitHub/Auto_TGC/Automacao/Escrita_Fiscal/Geracao_De_Informacoes_Oficiais/SPED_Fiscal/108805/Origem.txt" 
     Arq2 = Caminho e nome do arquivo de origem. Exemplo: "C:/Users/Desenvolvedor/Documents/Report.txt" 
     ArqDif = Caminho e nome do arquivo que vai demonstrar as diferenças. Exemplo: "C:\\GitHub\\Auto_TGC\\Automacao\\Escrita_Fiscal\\Geracao_De_Informacoes_Oficiais\\SPED_Fiscal\\108805\\Difer.txt"     
-    """    
-    GeraLog(False,"Iniciado a comparação de arquivos")
-    #Cria o arquivo que vai demostrar as diferenças
-    flog = open(ArqDif, "w")
-    #Abre o arquivo que fica guardado
-    f1 = open(Arq1, "r", encoding ="utf8")  
-    #Abre o arquivo que foi gerado agora
-    f2 = open(Arq2, "r", encoding ="utf8")          
-    i = 0
-    #Inicia a variável TemDif como falso. Ela dirá se tem diferença ou não
-    TemDif = False
-    #Inicia a leitura dos dois arquivos para ver se há diferença
-    for line1 in f1:
-        i += 1
-        for line2 in f2:
-            if line1 == line2:
-                break
-            else:
-                TemDif = True
-                flog.write('Diferença na linha ' + str(i) + ':\n')
-                flog.write('Antes  : ' + line1)
-                flog.write('Depois: ' + line2)
-                break
-    #Fecha todos arquivos manipulados
-    f1.close()                                       
-    f2.close()
-    flog.close()
-    
-    #Se tiver encontrado diferença, vai criar no LOG geral a linha abaixo, pedindo para ir no LOG de diferença para ver o que houve.
-    if TemDif:
-       GeraLog(False,"ERRO - O arquivo está diferente. Favor consultar " + ArqDif)
-       return False
-    
+    """
+    try:    
+        GeraLog(False,"Iniciado a comparação de arquivos")
+        #Cria o arquivo que vai demostrar as diferenças
+        flog = open(ArqDif, "w")
+        #Abre o arquivo que fica guardado
+        f1 = open(Arq1, "r", encoding ="utf8")  
+        #Abre o arquivo que foi gerado agora
+        f2 = open(Arq2, "r", encoding ="utf8")          
+        i = 0
+        #Inicia a variável TemDif como falso. Ela dirá se tem diferença ou não
+        TemDif = False
+        #Inicia a leitura dos dois arquivos para ver se há diferença
+        for line1 in f1:
+            i += 1
+            for line2 in f2:
+                if line1 == line2:
+                    break
+                else:
+                    TemDif = True
+                    flog.write('Diferença na linha ' + str(i) + ':\n')
+                    flog.write('Antes  : ' + line1)
+                    flog.write('Depois: ' + line2)
+                    break
+        #Fecha todos arquivos manipulados
+        f1.close()                                       
+        f2.close()
+        flog.close()        
+        #Se tiver encontrado diferença, vai criar no LOG geral a linha abaixo, pedindo para ir no LOG de diferença para ver o que houve.
+        if TemDif:
+            GeraLog(False,"ERRO - O arquivo está diferente. Favor consultar " + ArqDif)
+            return False
+    except:
+        GeraLog(False, "Ocorreu um erro de exceção no método ComparaArquivo")
     GeraLog(False,"Concluído a comparação de arquivos")
     return True
 
-def SelecionaEmpresa(CodigoEmpresa,TelaCertificado):
+def SelecionaEmpresa(CodigoEmpresa,TelaCertificado,Modulo):
     """
     Criação: 27/09/2022 Última Revisão 27/09/2022 Último Autor: Kleber
     CodigoEmpresa = Informe o código da empresa a ser selecionada. Exemplo: 21
     TelaCertificado = Após informar o código da empresa, pode ser que apareça a tela de certificados
                       vencidos. Informe True para dar um ESC nesta tela ou False caso o seu ambiente
                       de teste não apareça essa tela.
+    Modulo = Informe qual é o sistema que está sendo acessado
     """
-    GeraLog(False,"Iniciado a Seleção da empresa")
-    #Verificando se o sistema foi aberto para selecionar a empresa
-    if not ExisteImagem('SelecaoEmpresa.png',1):
-        GeraLog(False,"ERRO - Não abriu a tela para selecionar a empresa")
-        return False
-    #Pesquisa a imagem no menu principal e clica no campo
-    pyautogui.click( pyautogui.locateCenterOnScreen('C:\GitHub\Auto_TGC\Automacao\Framework\img\SelecaoEmpresa.png', confidence=0.9) ) 
-    #Vai para o início da lista de empresas
-    pyautogui.hotkey('ctrl','home')
-    #Escreve o código da empresa
-    pyautogui.typewrite(str(CodigoEmpresa))
-    #Tecla enter
-    pyautogui.press('enter')
-    time.sleep(2)
-    if TelaCertificado:
-        pyautogui.press('esc')
-    GeraLog(False,"Concluída a Seleção da empresa")
+    try:
+        GeraLog(False,"Iniciado a Seleção da empresa")
+        #Verificando se o sistema foi aberto para selecionar a empresa
+        if not ExisteImagem('C:\GitHub\Auto_TGC\Automacao\Framework\img\SelecaoEmpresa' + Modulo + '.png',5):
+            GeraLog(False,"ERRO - Não abriu a tela para selecionar a empresa")
+            return False
+        #Pesquisa a imagem no menu principal e clica no campo
+        pyautogui.click( pyautogui.locateCenterOnScreen('C:\GitHub\Auto_TGC\Automacao\Framework\img\SelecaoEmpresa' + Modulo + '.png', confidence=0.9) ) 
+        #Vai para o início da lista de empresas
+        pyautogui.hotkey('ctrl','home')
+        #Escreve o código da empresa
+        pyautogui.typewrite(str(CodigoEmpresa))
+        #Tecla enter
+        pyautogui.press('enter')
+        time.sleep(2)
+        #Se tiver tela de certificado, vai teclar ESC para sair
+        if TelaCertificado:
+            pyautogui.press('esc')
+        GeraLog(False,"Concluída a Seleção da empresa")
+    except:
+        GeraLog(False, "Ocorreu um erro de exceção no método SelecionaEmpresa")
     return True
 
-def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano,MensagemPendencia):
+def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano,MensagemPendencia,TemPendencia):
     """
     Criação: 27/09/2022 Última Revisão 27/09/2022 Último Autor: Kleber
     AnoCriacaoScript = O ano que o script que está desenvolvendo foi criado. Exemplo: 2022
@@ -185,7 +195,7 @@ def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano,MensagemPendencia):
     #Diretório atual
     DirAtu = os.getcwd()
     #Diretório onde está a imagem a ser pesquisada
-    DirImg = "C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\img"
+    DirImg = "C:\GitHub\Auto_TGC\Automacao\Framework\img"
     #Acessa diretório da imagem
     os.chdir(DirImg)
     #Rotina para clicar no Ano a ser selecionado
@@ -212,6 +222,9 @@ def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano,MensagemPendencia):
     
     if MensagemPendencia:
         pyautogui.press('enter')
+    else:
+        if TemPendencia:
+            pyautogui.press('esc')
     
     #Clica no meio da tela para dar o foco
     pyautogui.click(815,291)
@@ -492,5 +505,5 @@ def PreparaAmbiente(Redmine, IniciaIntegrador, ModuloSis):
 
     #Chamando o módulo TGC
     os.startfile("C:\\Program Files (x86)\\Tron" + ModuloSis + ModuloSis + ".exe")
-    time.sleep(10)
+    time.sleep(20)
     return True
