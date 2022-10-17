@@ -6,7 +6,7 @@ def Redmine_108805():
     try:
         if not PreparaAmbiente('108805', False, '\Escrita'):
             sys.exit(1)
-        if not SelecionaEmpresa(13,False):
+        if not SelecionaEmpresa(13,False,'Escrita'):
             sys.exit(1)
         SelecionaPeriodo(2022,4,2017,False,False)
         if not VerificaEmpresaPeriodoSelecionado('13','4','2017'):

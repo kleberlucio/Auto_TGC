@@ -12,7 +12,7 @@ def CalcularRescisao(TempoAbertura,TempoAberturaDaTela,CodigoEmpregado):
         time.sleep(TempoAbertura)
         pyautogui.press('insert')
         time.sleep(TempoAberturaDaTela)
-        pyautogui.typewrite(CodigoEmpregado)
+        pyautogui.typewrite(str(CodigoEmpregado))
         pyautogui.press('enter')
         GeraLog(False, "Concluído o método CalcularRescisão")
     except:
