@@ -8,17 +8,22 @@ def Redmine_105():
             sys.exit(1)
         if not SelecionaEmpresa(13,True):
             sys.exit(1)
+        
         SelecionaPeriodo(2022,10,2022,False,True)
+        
         if not VerificaEmpresaPeriodoSelecionado('13','10','2022'):
             sys.exit(1)
-        CalcularRescisao(3,3,171)
-        pyautogui.press(['enter','enter','enter'])
-        pyautogui.typewrite('05102022')
+        
+        CalcularRescisao(3,3,171)   
+        pyautogui.press(['enter','enter','enter'])   
+        #PressionarTeclas("'enter','enter','enter'")
+        EscreverTexto('05102022');
         pyautogui.press('enter')
-        pyautogui.typewrite('1')
+        EscreverTexto('1');
         pyautogui.press('enter')
-        time.sleep(8)
-        if not ExisteImagem('C:\\GitHub\\Auto_TGC\\Automacao\\Kleber_Server01\\Folha_Pagamento\\Rescisao\\Calculo_Rescisao\img\\Redmine_101010_calculo_rescisao.png',1):
+        EsperarTempo(8)
+
+        if not ExisteImagem('C:\\GitHub\\Auto_TGC\\Automacao\\Kleber_Server01\\Folha_Pagamento\\Rescisao\\Calculo_Rescisao\\img\\Redmine_101010_calculo_rescisao.png',1):
             GeraLog(False,"ERRO - Cálculo da rescisão errado")
             return False
     except:
