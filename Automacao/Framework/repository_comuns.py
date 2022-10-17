@@ -489,7 +489,7 @@ def PreparaAmbiente(Redmine, IniciaIntegrador, ModuloSis):
         pyautogui.hotkey('alt','c')
 
         #Ativando o integrador, precionando a sequencia de teclas abaixo.
-        pyautogui.press(['a','s','enter','s','esc'])
+        pyautogui.press(['a', 's', 'enter', 's', 'esc'])
 
         #Iniciando o Tron Integrador
         os.system('net start TronIntegradorSvc')
