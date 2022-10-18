@@ -161,9 +161,11 @@ def SelecionaEmpresa(CodigoEmpresa,TelaCertificado,Modulo):
     try:
         GeraLog(False,"Iniciado a Seleção da empresa")
         #Verificando se o sistema foi aberto para selecionar a empresa
+
         if not ExisteImagem('C:\GitHub\Auto_TGC\Automacao\Framework\img\SelecaoEmpresa' + Modulo + '.png',5):
             GeraLog(False,"ERRO - Não abriu a tela para selecionar a empresa")
             return False
+            
         #Pesquisa a imagem no menu principal e clica no campo
         pyautogui.click( pyautogui.locateCenterOnScreen('C:\GitHub\Auto_TGC\Automacao\Framework\img\SelecaoEmpresa' + Modulo + '.png', confidence=0.9) ) 
         #Vai para o início da lista de empresas
@@ -405,7 +407,7 @@ def PreparaAmbiente(Redmine, IniciaIntegrador, ModuloSis):
     fileList = glob.glob('C:\\Program Files (x86)\\Tron\\*.rel')
     for filePath in fileList:
         os.rename(filePath,"C:\\Program Files (x86)\\Tron\\Atualiza.bin")
-
+    #'''
     #Verificando se existe o Atualiza.bin. Caso contrário, tenho que parar a execução da função
     if not os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.bin"):
         GeraLog(False,"ERRO - Ocorreu falha ao renomear o Atualiza.bin")
@@ -415,7 +417,7 @@ def PreparaAmbiente(Redmine, IniciaIntegrador, ModuloSis):
     if not os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.ban"):
         GeraLog(False,"ERRO - Ocorreu falha ao renomear o Atualiza.ban")        
         return False
-
+    #'''
     #Iniciando o Firebird
     os.system('net start FirebirdServerTGCTRONC')
 
@@ -487,7 +489,7 @@ def PreparaAmbiente(Redmine, IniciaIntegrador, ModuloSis):
         pyautogui.hotkey('alt','c')
 
         #Ativando o integrador, precionando a sequencia de teclas abaixo.
-        pyautogui.press(['a','s','enter','s','esc'])
+        pyautogui.press(['a', 's', 'enter', 's', 'esc'])
 
         #Iniciando o Tron Integrador
         os.system('net start TronIntegradorSvc')
@@ -507,3 +509,40 @@ def PreparaAmbiente(Redmine, IniciaIntegrador, ModuloSis):
     os.startfile("C:\\Program Files (x86)\\Tron" + ModuloSis + ModuloSis + ".exe")
     time.sleep(20)
     return True
+
+def EscreverTexto(texto):
+    """
+    Criação: 14/10/2022 Última Revisão 14/10/2022 Último Autor: Johnathan
+    """
+    try:
+        #Escrevendo texto informado (OBS: Comando feito ativando as teclas)
+        pyautogui.typewrite(texto)
+        
+        GeraLog(False,"Foi informado o texto: " + texto)
+    except:
+        GeraLog(False, "Ocorreu um erro ao informar o texto: " + texto)
+
+def EsperarTempo(tempoEmSegundos):
+    """
+    Criação: 14/10/2022 Última Revisão 14/10/2022 Último Autor: Johnathan
+    """
+    try:
+        #Esperando o tempo informado
+        time.sleep(tempoEmSegundos)
+        
+        GeraLog(False,"Esperou " + tempoEmSegundos + " Segundos")
+    except:
+        GeraLog(False, "Ocorreu um erro ao esperar tempo")
+
+def PressionarTeclas(textoTeclas):
+    """
+    Criação: 14/10/2022 Última Revisão 14/10/2022 Último Autor: Johnathan
+    Exemplo(s) para variavel 'textoTeclas': "'enter','enter','enter'" ou só 'enter'
+    """
+    try:
+        pyautogui.press([textoTeclas])
+        
+        GeraLog(False,"Informou a sequência de teclas " + textoTeclas)
+    except:
+        GeraLog(False, "Ocorreu um erro ao informar a sequência de teclas " + textoTeclas)
+

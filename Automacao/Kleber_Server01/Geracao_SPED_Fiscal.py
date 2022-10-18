@@ -1,3 +1,6 @@
+#Automações relacionadas ao módulo de Escrita Fiscal
+#Opção de Geração do Sped Fiscal
+
 from repository_comuns import *
 from repository_escrita import *
 import sys
