@@ -10,25 +10,36 @@ def Redmine_79489():
         VerificaEmpresaPeriodoSelecionado('55','7','2019')
         CalcularRescisao(5, 10, 1)
         pyautogui.press('S')
-        AvisoLei12506('S', 'N')
-        
-# Informando as datas de aviso e data de rescisão
-        pyautogui.write('06062019', 'enter', '28072019', 'enter')
-# Informando o motivo de rescisão
-        pyautogui.press('1', 'enter')
+        pyautogui.press('enter', 'right', 'enter')
+        pyautogui.typewrite('1')
+        pyautogui.press('enter')
+        time.sleep(8)
+        pyautogui.press('N')
         time.sleep(5)
-# Gravando a rescisão
-        pyautogui.press('enter', 'F11', 'right', 'enter', 'right', 'enter')
-
+        pyautogui.press('F11')
+        pyautogui.press(['N', 'N'])
+        pyautogui.press(['right', 'enter'])
+        time.sleep(3)
+        pyautogui.press('F9')
+        time.sleep(2)
+        pyautogui.hotkey('alt', 'M')
+        pyautogui.typewrite('Rescisão Portaria n° 1057 I - Atual')
+        pyautogui.press('F9')
+        pyautogui.press('S')
+        time.sleep(5)
+        EmissaoRelatorios(10)
 
     except:
         GeraLog(False, 'Erro...')
 
 
-Redmine_79489() 
 
+pyautogui.click(1248,8)
+EmissaoRelatorios(10)
+
+
+#Redmine_79489() 
 #pyautogui.click(1248,8)
-
 #time.sleep(2)
 #x, y = pyautogui.position()
 #print ("Posicao atual do mouse:")

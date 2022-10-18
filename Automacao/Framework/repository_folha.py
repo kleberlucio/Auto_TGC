@@ -18,15 +18,28 @@ def CalcularRescisao(TempoAbertura,TempoAberturaDaTela,CodigoEmpregado):
     except:
         GeraLog(False,'Ocorreu um erro no método CalcularRescisão')
 
-def AvisoLei12506(GeraAviso, ProjetaData):
+def EmissaoRelatorios(TempoEmissao):
     try:
-        GeraLog(False, 'Selecionando o aviso 12506 na rescisão')
-        pyautogui.press('enter')
-        if GeraAviso == 'S':
-            pyautogui.press('enter')
-        else:
-            pyautogui.press(['left', 'enter'])
-        if GeraAviso == 'S' and ProjetaData == 'S':
-            pyautogui.press('right', 'enter')
+        #Excluindo relatórios gerados pelo sistema
+        if os.path.exists("C:\\Users\\Public\\Documents\\Report.prn"):
+            os.remove("C:\\Users\\Public\\Documents\\Report.prn")
+        GeraLog(False, 'Iniciando emissão de relatórios e recibos')
+        # clica no ícone da impressora
+        pyautogui.click( pyautogui.locateCenterOnScreen('C:\GitHub\Auto_TGC\Automacao\Framework\img\impressora.png', confidence=0.9) ) 
+        time.sleep(1)
+        # clica na opção de imprimir para arquivo
+        pyautogui.click( pyautogui.locateCenterOnScreen('C:\GitHub\Auto_TGC\Automacao\Framework\img\imprimirParaArquivo.png', confidence=0.9) )
+        time.sleep(20)
+        # clica no tipo de arquivo
+        GeraLog(False, 'Não chegou a clicar no tipo de arquivo')
+        pyautogui.click( pyautogui.locateCenterOnScreen('C:\GitHub\Auto_TGC\Automacao\Framework\img\tipoArquivo.png', confidence=0.9) )
+        GeraLog(False, 'clicou no tipo de arquivo')
+        # escreve o tipo de arquivo a ser usado
+        GeraLog(False, 'Vai começar a digitar')
+        pyautogui.typewrite('arquivo para')
+        GeraLog(False, 'digitou o arquivo')
+        # clica na geração do arquivo
+        pyautogui.click( pyautogui.locateCenterOnScreen('C:\GitHub\Auto_TGC\Automacao\Framework\img\geracaoRelatorio.png', confidence=0.9) )
+        time.sleep(TempoEmissao)
     except:
-        GeraLog(False, 'Erro no aviso da lei 12506.')
+        GeraLog(False, 'Falha na emissão do relatório.')
