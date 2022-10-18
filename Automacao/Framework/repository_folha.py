@@ -23,6 +23,9 @@ def EmissaoRelatorios(TempoEmissao):
         #Excluindo relatórios gerados pelo sistema
         if os.path.exists("C:\\Users\\Public\\Documents\\Report.prn"):
             os.remove("C:\\Users\\Public\\Documents\\Report.prn")
+        if os.path.exists("C:\\Users\\Public\\Documents\\Report.prn"):
+            GeraLog(False,"ERRO - Não foi possível excluir o arquivo Report.prn")
+            return False
         GeraLog(False, 'Iniciando emissão de relatórios e recibos')
         # clica no ícone da impressora
         pyautogui.click( pyautogui.locateCenterOnScreen('C:\GitHub\Auto_TGC\Automacao\Framework\img\impressora.png', confidence=0.9) ) 
