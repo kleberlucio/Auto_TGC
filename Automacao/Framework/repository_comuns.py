@@ -3,6 +3,7 @@
 from ast import Return
 from datetime import datetime
 from operator import truediv
+from warnings import catch_warnings
 from winreg import *
 import winreg
 import os
@@ -12,6 +13,7 @@ import glob
 import time
 import pyautogui
 import logging
+import sys
 
 def ExcluiProcesso(Processo):
     """
@@ -68,43 +70,46 @@ def ExisteImagem(Imagem,Aguarda):
             return False
     except:
         GeraLog(False, "Ocorreu um erro de exceção no método ExisteImagem")
+        sys.exit(1)
     return True
 
-def VerificaEmpresaPeriodoSelecionado(Empresa,Mes,Ano):
+def VerificaEmpresaPeriodoSelecionado(Empresa, Mes, Ano):
     """
-    Criação: 28/09/2022 Última Revisão 28/09/2022 Último Autor: Kleber
+    Criação: 28/09/2022 Última Revisão 18/10/2022 Último Autor: Johnathan
     Empresa = Informe o código da empresa selecionada. Exemplo: '10'
     Mes = Informe o mês selecionado. Exemplo: '5'
     Ano = Informe o ano selecionado. Exemplo: '2020'
-    """    
+    """ 
     GeraLog(False,"Iniciado a verificação da empresa, mês e ano selecionado")
     #Pega dados do registro do Windows que possui estas informações
     aReg = winreg.ConnectRegistry(None, HKEY_CURRENT_USER)
-    aKey = winreg.OpenKey(aReg,r"SOFTWARE\Tron\Selecionado")
-    Passou = True    
+    aKey = winreg.OpenKey(aReg, r"SOFTWARE\Tron\Selecionado")
+    PassouEmp = False 
+    PassouMes = False 
+    PassouAno = False 
+
     try:
         i = 0
         while 1:
             #Procura na lista se existe os dados informados. Caso não seja, já vai gerar LOG de erro
             name, value, type = EnumValue(aKey, i)
-            if name == 'Codigo' and not (Empresa == value):
-                GeraLog(False,"ERRO - Não selecionou a empresa correta")
-                Passou = False
-                break
-            if name == 'Mes' and not (Mes == value):
-                GeraLog(False,"ERRO - Não selecionou o mês correto")
-                Passou = False
-                break
-            if name == 'Ano' and not (Ano == value):
-                GeraLog(False,"ERRO - Não selecionou o ano correto")
-                Passou = False
-                break
+            
+            if (name == 'Codigo') and (Empresa == value):
+                PassouEmp = True
+            if (name == 'Mes') and (Mes == value):
+                PassouMes = True
+            if (name == 'Ano') and (Ano == value):
+                PassouAno = True
+            if (PassouEmp == True) and (PassouMes == True) and (PassouAno == True): # verifica se todos os dados necessários estão presentes e corretos conforme informado nos parãmetros
+                GeraLog(False, "Verificação de empresa, mês e ano selecionado(s) concluída com sucesso.") 
+                break # não precisa verificar mais nenhum dado nesse metodo 
             i += 1
+ 
     except WindowsError:
-        GeraLog(False, "Finalizada a verificação da empresa, mês e ano selecionado")
+        GeraLog(False, "Erro ao verificar a empresa, mês e ano selecionado(s)")
+        sys.exit(1)
     #Fecha a coneção 
     CloseKey(aKey)
-    return Passou
 
 def ComparaArquivo(Arq1,Arq2,ArqDif):
     """
@@ -161,9 +166,11 @@ def SelecionaEmpresa(CodigoEmpresa,TelaCertificado,Modulo):
     try:
         GeraLog(False,"Iniciado a Seleção da empresa")
         #Verificando se o sistema foi aberto para selecionar a empresa
+
         if not ExisteImagem('C:\GitHub\Auto_TGC\Automacao\Framework\img\SelecaoEmpresa' + Modulo + '.png',5):
             GeraLog(False,"ERRO - Não abriu a tela para selecionar a empresa")
             return False
+            
         #Pesquisa a imagem no menu principal e clica no campo
         pyautogui.click( pyautogui.locateCenterOnScreen('C:\GitHub\Auto_TGC\Automacao\Framework\img\SelecaoEmpresa' + Modulo + '.png', confidence=0.9) ) 
         #Vai para o início da lista de empresas
@@ -176,9 +183,11 @@ def SelecionaEmpresa(CodigoEmpresa,TelaCertificado,Modulo):
         #Se tiver tela de certificado, vai teclar ESC para sair
         if TelaCertificado:
             pyautogui.press('esc')
-        GeraLog(False,"Concluída a Seleção da empresa")
+
+        GeraLog(False,"Foi concluída a Seleção da empresa")
     except:
         GeraLog(False, "Ocorreu um erro de exceção no método SelecionaEmpresa")
+        sys.exit(1)
     return True
 
 def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano,MensagemPendencia,TemPendencia):
@@ -191,46 +200,51 @@ def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano,MensagemPendencia,TemPendencia):
                         os empregados. Informe True para que seja teclado ENTER na mensagem ou False caso seu ambiente
                         de teste não apresente esta mensagem.    
     """
-    GeraLog(False, "Iniciado a Seleção do período")
-    #Diretório atual
-    DirAtu = os.getcwd()
-    #Diretório onde está a imagem a ser pesquisada
-    DirImg = "C:\GitHub\Auto_TGC\Automacao\Framework\img"
-    #Acessa diretório da imagem
-    os.chdir(DirImg)
-    #Rotina para clicar no Ano a ser selecionado
-    VoltaAno = ( (AnoCriacaoScript - Ano) )
-    
-    if VoltaAno == 1:
-        VoltaAno = 0
-    while VoltaAno > 0:
-        pyautogui.click( pyautogui.locateCenterOnScreen('VoltaAno.png', confidence=0.9) )
-        VoltaAno = VoltaAno - 1
-    
-    #Rotina para clicar no Mês a ser selecionado
-    Meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"]
-    Cont = 0
-    
-    for QualMes in Meses:
-        Cont = Cont + 1
-        if Cont == Mes:
-            if datetime.now().month == Mes:
-                pyautogui.doubleClick( pyautogui.locateCenterOnScreen(QualMes+'2.png', confidence=0.9) )
-            else:
-                pyautogui.doubleClick( pyautogui.locateCenterOnScreen(QualMes+'1.png', confidence=0.9) )
-            break
-    
-    if MensagemPendencia:
-        pyautogui.press('enter')
-    else:
-        if TemPendencia:
-            pyautogui.press('esc')
-    
-    #Clica no meio da tela para dar o foco
-    pyautogui.click(815,291)
-    #Volta para o diretório atual.
-    os.chdir(DirAtu)
-    GeraLog(False,"Concluído a Seleção do período")
+    try:
+        GeraLog(False, "Iniciado a Seleção do período")
+        #Diretório atual
+        DirAtu = os.getcwd()
+        #Diretório onde está a imagem a ser pesquisada
+        DirImg = "C:\GitHub\Auto_TGC\Automacao\Framework\img"
+        #Acessa diretório da imagem
+        os.chdir(DirImg)
+        #Rotina para clicar no Ano a ser selecionado
+        VoltaAno = ( (AnoCriacaoScript - Ano) )
+        
+        if VoltaAno == 1:
+            VoltaAno = 0
+        while VoltaAno > 0:
+            pyautogui.click( pyautogui.locateCenterOnScreen('VoltaAno.png', confidence=0.9) )
+            VoltaAno = VoltaAno - 1
+        
+        #Rotina para clicar no Mês a ser selecionado
+        Meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"]
+        Cont = 0
+        
+        for QualMes in Meses:
+            Cont = Cont + 1
+            if Cont == Mes:
+                if datetime.now().month == Mes:
+                    pyautogui.doubleClick( pyautogui.locateCenterOnScreen(QualMes+'2.png', confidence=0.9) )
+                else:
+                    pyautogui.doubleClick( pyautogui.locateCenterOnScreen(QualMes+'1.png', confidence=0.9) )
+                break
+        
+        if MensagemPendencia:
+            pyautogui.press('enter')
+        else:
+            if TemPendencia:
+                pyautogui.press('esc')
+        
+        #Clica no meio da tela para dar o foco
+        pyautogui.click(815,291)
+        #Volta para o diretório atual.
+        os.chdir(DirAtu)
+
+        GeraLog(False, "Foi concluído a Seleção do período")
+    except:
+        GeraLog(False, "Ocorreu algum erro na Seleção do período")
+        sys.exit(1)
     
 def GeraLog(apagarDadosLog, TextoDoLog):
     """
@@ -260,250 +274,296 @@ def PreparaAmbiente(Redmine, IniciaIntegrador, ModuloSis):
     ModuloSis = Informe qual módulo receberá a automação. Exemplo: '\Folha.exe'
     """
     #Carregando o arquivo de log
-    GeraLog(False, "Iniciando a preparação do ambiente para testar a tarefa " + Redmine)
+    try:
+        GeraLog(False, "Iniciando a preparação do ambiente para testar a tarefa " + Redmine)
 
-    #Verificando se o módulo está aberto, para poder fechá-lo
-    if not ExcluiProcesso(ModuloSis[1:]):
-        return False
+        #Verificando se o módulo está aberto, para poder fechá-lo
+        if not ExcluiProcesso(ModuloSis[1:]):
+            return False
 
-    #Excluindo arquivos XML de LOG de banco
-    fileList = glob.glob('C:/Program Files (x86)/Tron/*.xml')
-    for filePath in fileList:
-        os.remove(filePath)
-
-    #Verificando se os arquivos foram de fato excluidos. Caso contrário, tenho que parar a execução da função
-    TemXML = False
-    fileList = glob.glob('C:/Program Files (x86)/Tron/*.xml')
-    for filePath in fileList:
-        TemXML = True
-    if TemXML:
-        GeraLog(False,"ERRO - Não foi possível excluir todos os XML de LOG de banco")
-        return False
-
-    #Colhendo dados sobre o serviço do Firebird para testes
-    service = psutil.win_service_get('FirebirdServerTGCTRONC')
-    service = service.as_dict()
-    
-    #Pedindo para parar o serviço
-    if (service and service['status'] == 'running'):
-        os.system('net stop FirebirdServerTGCTRONC')
-    
-    #Colhendo dados atualizados sobre o serviço do Firebird para testes
-    service = psutil.win_service_get('FirebirdServerTGCTRONC')
-    service = service.as_dict()
-
-    #Verificando, caso o serviço ainda esteja rodando, tenho que parar a execução da função
-    if (service and service['status'] == 'running'):
-        GeraLog(False,"ERRO - Não foi possível parar o serviço do Firebird")
-        return False
-
-    #Colhendo dados sobre o serviço do Tron Integrador para testes
-    service = psutil.win_service_get('TronIntegradorSvc')
-    service = service.as_dict()
-
-    #Pedindo para parar o serviço
-    if (service and service['status'] == 'running'):
-        os.system('net stop TronIntegradorSvc')
-
-    #Colhendo dados atualizados sobre o serviço do Tron Integrador para testes
-    service = psutil.win_service_get('TronIntegradorSvc')
-    service = service.as_dict()
-
-    #Caso o serviço ainda esteja rodando, tenho que parar a execução da função
-    if (service and service['status'] == 'running'):
-        GeraLog(False, "ERRO - Não foi possível parar o serviço do Tron Integrador")
-        return False
-    
-    #Excluindo relatórios gerados pelo sistema
-    if os.path.exists("C:\\Users\\Public\\Documents\\Report.pdf"):
-        os.remove("C:\\Users\\Public\\Documents\\Report.pdf")
-
-    #Verificando se o arquivo foi de fato excluido. Caso contrário, tenho que parar a execução da função
-    if os.path.exists("C:\\Users\\Public\\Documents\\Report.pdf"):
-        GeraLog(False, "ERRO - Não foi possível excluir o arquivo Report.pdf")
-        return False
-
-    #Excluindo relatórios gerados pelo sistema
-    if os.path.exists("C:\\Users\\Public\\Documents\\Report.prn"):
-        os.remove("C:\\Users\\Public\\Documents\\Report.prn")
-
-    #Verificando se o arquivo foi de fato excluido. Caso contrário, tenho que parar a execução da função
-    if os.path.exists("C:\\Users\\Public\\Documents\\Report.prn"):
-        GeraLog(False,"ERRO - Não foi possível excluir o arquivo Report.prn")
-        return False
-
-    #Excluindo arquivos XML utilizados anteriormente
-    fileList = glob.glob('C:\\Bancos\\*.xml')
-    for filePath in fileList:
-        os.remove(filePath)
-
-    #Verificando se os arquivos foram de fato excluidos. Caso contrário, tenho que parar a execução da função
-    TemXML = False
-    fileList = glob.glob('C:\\Bancos\\*.xml')
-    
-    for filePath in fileList:
-        TemXML = True
-    if TemXML:
-        GeraLog(False,"ERRO - Não foi possível excluir todos os XML utilizados anteriormente")
-        return False
-
-    #Excluindo arquivos TXT utilizados anteriormente
-    fileList = glob.glob('C:\\Bancos\\*.txt')
-    for filePath in fileList:
-        os.remove(filePath)
-
-    #Verificando se os arquivos foram de fato excluidos. Caso contrário, tenho que parar a execução da função
-    TemTXT = False
-    fileList = glob.glob('C:\\Bancos\\*.txt')
-    for filePath in fileList:
-        TemTXT = True
-    if TemTXT:
-        GeraLog(False,"ERRO - Não foi possível excluir todos os TXT utilizados anteriormente")
-        return False
-
-    #Excluindo o banco utilizando anteriormente
-    if os.path.exists("C:\\Bancos\\troncg.idb"):
-        os.remove("C:\\Bancos\\troncg.idb")
-
-    #Verificando se o arquivo foi de fato excluido. Caso contrário, tenho que parar a execução da função
-    if os.path.exists("C:\\Bancos\\troncg.idb"):
-        GeraLog(False,"ERRO - Não foi possível excluir o TRONCG.IDB")
-        return False
-
-    #Verificando se existe o arquivo de banco compactado. Caso contrário, tenho que parar a execução da função
-    if not os.path.exists("C:\\Bancos\\" + Redmine + "\\Banco.rar"):
-        GeraLog(False,"ERRO - Não existe o arquivo BANCO.RAR")
-        return False
-
-    #Extrai o arquivo compactado na pasta bancos
-    if os.path.exists("C:\\Bancos\\" + Redmine + "\\Banco.rar"):
-        patoolib.extract_archive("C:\\Bancos\\" + Redmine + "\\Banco.rar", outdir="C:\\Bancos")
-
-    #Verificando se existe o arquivo de banco descompactado. Caso contrário, tenho que parar a execução da função
-    if not os.path.exists("C:\\Bancos\\troncg.idb"):
-        GeraLog(False,"ERRO - Não o arquivo TRONCG.IDB após a descompactação")
-        return False
-
-    #Extrai arquivos de importação
-    if os.path.exists("C:\\Bancos\\" + Redmine + "\\Arquivos.rar"):
-        patoolib.extract_archive("C:\\Bancos\\" + Redmine + "\\Arquivos.rar", outdir="C:\\Bancos")
-
-    #Excluindo o Atualiza.bin
-    if os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.bin"):
-        os.remove("C:\\Program Files (x86)\\Tron\Atualiza.bin")
-    
-    #Excluindo o Atualiza.ban
-    if os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.ban"):
-        os.remove("C:\\Program Files (x86)\\Tron\Atualiza.ban")
-
-    #Renomeando de OLD para BAN
-    fileList = glob.glob('C:\\Program Files (x86)\\Tron\\*.old')
-    for filePath in fileList:
-        os.rename(filePath,"C:\\Program Files (x86)\\Tron\\Atualiza.ban")
-
-    #Renomeando de REL para BIN
-    fileList = glob.glob('C:\\Program Files (x86)\\Tron\\*.rel')
-    for filePath in fileList:
-        os.rename(filePath,"C:\\Program Files (x86)\\Tron\\Atualiza.bin")
-
-    #Verificando se existe o Atualiza.bin. Caso contrário, tenho que parar a execução da função
-    if not os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.bin"):
-        GeraLog(False,"ERRO - Ocorreu falha ao renomear o Atualiza.bin")
-        return False
-
-    #Verificando se existe o Atualiza.ban. Caso contrário, tenho que parar a execução da função
-    if not os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.ban"):
-        GeraLog(False,"ERRO - Ocorreu falha ao renomear o Atualiza.ban")        
-        return False
-
-    #Iniciando o Firebird
-    os.system('net start FirebirdServerTGCTRONC')
-
-    #Colhendo dados sobre o serviço do Firebird para testes
-    service = psutil.win_service_get('FirebirdServerTGCTRONC')
-    service = service.as_dict()
-
-    #Verificando se o serviço do Firebird foi iniciado. Caso contrário, tenho que parar a execução da função
-    if not (service and service['status'] == 'running'):
-        GeraLog(False, "ERRO - Ocorreu falha ao tentar iniciar o Firebird")
-        return False
-    
-    #Chamando o módulo TGC
-    os.startfile("C:\\Program Files (x86)\\Tron" + ModuloSis + ModuloSis + ".exe")
-
-    #Aguardando a abertura do módulo
-    time.sleep(10)
-
-    #Verificando se o módulo está aberto. Caso contrário, tenho que parar a execução da função
-    ModuloEstaRodando = False
-    
-    for p in psutil.process_iter(attrs=['pid', 'name']):
-        if p.info['name'] == (ModuloSis[1:] + ".exe"):
-            ModuloEstaRodando = True
-            break
-    if not ModuloEstaRodando:
-        GeraLog(False,"ERRO - O processo do módulo " + ModuloSis[1:] + ".exe não está em execução")
-        return False
-
-    #Restruturando o banco. O tempo limite de espera será de 10 minutos
-    #Caso tenha arquivo XML na pasta TRON, deu LOG de banco
-    TempoLimite = 0
-    DeuLog = False
-    
-    while os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.ban"):
-        time.sleep(1)
-        TempoLimite = TempoLimite + 1
-        if TempoLimite > 600 or DeuLog:
-            break          
-        fileList = glob.glob('C:\\Program Files (x86)\\tron\\*.xml')
+        #Excluindo arquivos XML de LOG de banco
+        fileList = glob.glob('C:/Program Files (x86)/Tron/*.xml')
         for filePath in fileList:
-            DeuLog = True
-            break
-    
-    if TempoLimite > 600:
-        GeraLog(False,"ERRO - A estruturação do banco levou mais de 10 minutos.")
-        return False
+            os.remove(filePath)
 
-    if DeuLog:
-        GeraLog(False,"ATENCAO - Ocorreu LOG de banco após a restruturação. Acionar DBA.")
-    
-    #Verificando se o módulo está aberto, para poder fechá-lo
-    if not ExcluiProcesso(ModuloSis[1:]):
-        return False
-
-    #Iniciando o processo do Tron Integrador
-    if IniciaIntegrador:
-
-        #Chamando o Tron Integrador
-        os.startfile("C:\\Program Files (x86)\\Tron\\TronIntegrador\\Tron.Integrador.exe")
-
-        #Aguardando a abertura do Integrador
-        time.sleep(2)
-
-        #Pressionando Enter na mensagem apresentada
-        pyautogui.press('enter')
-
-        #Abrindo o menu configurações
-        pyautogui.hotkey('alt','c')
-
-        #Ativando o integrador, precionando a sequencia de teclas abaixo.
-        pyautogui.press(['a','s','enter','s','esc'])
-
-        #Iniciando o Tron Integrador
-        os.system('net start TronIntegradorSvc')
+        #Verificando se os arquivos foram de fato excluidos. Caso contrário, tenho que parar a execução da função
+        TemXML = False
+        fileList = glob.glob('C:/Program Files (x86)/Tron/*.xml')
+        for filePath in fileList:
+            TemXML = True
+        if TemXML:
+            GeraLog(False,"ERRO - Não foi possível excluir todos os XML de LOG de banco")
+            return False
 
         #Colhendo dados sobre o serviço do Firebird para testes
+        service = psutil.win_service_get('FirebirdServerTGCTRONC')
+        service = service.as_dict()
+        
+        #Pedindo para parar o serviço
+        if (service and service['status'] == 'running'):
+            os.system('net stop FirebirdServerTGCTRONC')
+        
+        #Colhendo dados atualizados sobre o serviço do Firebird para testes
+        service = psutil.win_service_get('FirebirdServerTGCTRONC')
+        service = service.as_dict()
+
+        #Verificando, caso o serviço ainda esteja rodando, tenho que parar a execução da função
+        if (service and service['status'] == 'running'):
+            GeraLog(False,"ERRO - Não foi possível parar o serviço do Firebird")
+            return False
+
+        #Colhendo dados sobre o serviço do Tron Integrador para testes
         service = psutil.win_service_get('TronIntegradorSvc')
         service = service.as_dict()
 
-        #Verificando, caso o serviço não esteja rodando, tenho que parar a execução da função
-        if not (service and service['status'] == 'running'):
-            GeraLog(False,"ERRO - Ocorreu falha ao iniciar o Tron Integrador")
+        #Pedindo para parar o serviço
+        if (service and service['status'] == 'running'):
+            os.system('net stop TronIntegradorSvc')
+
+        #Colhendo dados atualizados sobre o serviço do Tron Integrador para testes
+        service = psutil.win_service_get('TronIntegradorSvc')
+        service = service.as_dict()
+
+        #Caso o serviço ainda esteja rodando, tenho que parar a execução da função
+        if (service and service['status'] == 'running'):
+            GeraLog(False, "ERRO - Não foi possível parar o serviço do Tron Integrador")
+            return False
+        
+        #Excluindo relatórios gerados pelo sistema
+        if os.path.exists("C:\\Users\\Public\\Documents\\Report.pdf"):
+            os.remove("C:\\Users\\Public\\Documents\\Report.pdf")
+
+        #Verificando se o arquivo foi de fato excluido. Caso contrário, tenho que parar a execução da função
+        if os.path.exists("C:\\Users\\Public\\Documents\\Report.pdf"):
+            GeraLog(False, "ERRO - Não foi possível excluir o arquivo Report.pdf")
             return False
 
-    GeraLog(False,"Preparação do Ambiente finalizada")
+        #Excluindo relatórios gerados pelo sistema
+        if os.path.exists("C:\\Users\\Public\\Documents\\Report.prn"):
+            os.remove("C:\\Users\\Public\\Documents\\Report.prn")
 
-    #Chamando o módulo TGC
-    os.startfile("C:\\Program Files (x86)\\Tron" + ModuloSis + ModuloSis + ".exe")
-    time.sleep(20)
-    return True
+        #Verificando se o arquivo foi de fato excluido. Caso contrário, tenho que parar a execução da função
+        if os.path.exists("C:\\Users\\Public\\Documents\\Report.prn"):
+            GeraLog(False,"ERRO - Não foi possível excluir o arquivo Report.prn")
+            return False
+
+        #Excluindo arquivos XML utilizados anteriormente
+        fileList = glob.glob('C:\\Bancos\\*.xml')
+        for filePath in fileList:
+            os.remove(filePath)
+
+        #Verificando se os arquivos foram de fato excluidos. Caso contrário, tenho que parar a execução da função
+        TemXML = False
+        fileList = glob.glob('C:\\Bancos\\*.xml')
+        
+        for filePath in fileList:
+            TemXML = True
+        if TemXML:
+            GeraLog(False,"ERRO - Não foi possível excluir todos os XML utilizados anteriormente")
+            return False
+
+        #Excluindo arquivos TXT utilizados anteriormente
+        fileList = glob.glob('C:\\Bancos\\*.txt')
+        for filePath in fileList:
+            os.remove(filePath)
+
+        #Verificando se os arquivos foram de fato excluidos. Caso contrário, tenho que parar a execução da função
+        TemTXT = False
+        fileList = glob.glob('C:\\Bancos\\*.txt')
+        for filePath in fileList:
+            TemTXT = True
+        if TemTXT:
+            GeraLog(False,"ERRO - Não foi possível excluir todos os TXT utilizados anteriormente")
+            return False
+
+        #Excluindo o banco utilizando anteriormente
+        if os.path.exists("C:\\Bancos\\troncg.idb"):
+            os.remove("C:\\Bancos\\troncg.idb")
+
+        #Verificando se o arquivo foi de fato excluido. Caso contrário, tenho que parar a execução da função
+        if os.path.exists("C:\\Bancos\\troncg.idb"):
+            GeraLog(False,"ERRO - Não foi possível excluir o TRONCG.IDB")
+            return False
+
+        #Verificando se existe o arquivo de banco compactado. Caso contrário, tenho que parar a execução da função
+        if not os.path.exists("C:\\Bancos\\" + Redmine + "\\Banco.rar"):
+            GeraLog(False,"ERRO - Não existe o arquivo BANCO.RAR")
+            return False
+
+        #Extrai o arquivo compactado na pasta bancos
+        if os.path.exists("C:\\Bancos\\" + Redmine + "\\Banco.rar"):
+            patoolib.extract_archive("C:\\Bancos\\" + Redmine + "\\Banco.rar", outdir="C:\\Bancos")
+
+        #Verificando se existe o arquivo de banco descompactado. Caso contrário, tenho que parar a execução da função
+        if not os.path.exists("C:\\Bancos\\troncg.idb"):
+            GeraLog(False,"ERRO - Não o arquivo TRONCG.IDB após a descompactação")
+            return False
+
+        #Extrai arquivos de importação
+        if os.path.exists("C:\\Bancos\\" + Redmine + "\\Arquivos.rar"):
+            patoolib.extract_archive("C:\\Bancos\\" + Redmine + "\\Arquivos.rar", outdir="C:\\Bancos")
+
+        #Excluindo o Atualiza.bin
+        if os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.bin"):
+            os.remove("C:\\Program Files (x86)\\Tron\Atualiza.bin")
+        
+        #Excluindo o Atualiza.ban
+        if os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.ban"):
+            os.remove("C:\\Program Files (x86)\\Tron\Atualiza.ban")
+
+        #Renomeando de OLD para BAN
+        fileList = glob.glob('C:\\Program Files (x86)\\Tron\\*.old')
+        for filePath in fileList:
+            os.rename(filePath,"C:\\Program Files (x86)\\Tron\\Atualiza.ban")
+
+        #Renomeando de REL para BIN
+        fileList = glob.glob('C:\\Program Files (x86)\\Tron\\*.rel')
+        for filePath in fileList:
+            os.rename(filePath,"C:\\Program Files (x86)\\Tron\\Atualiza.bin")
+        '''
+        #Verificando se existe o Atualiza.bin. Caso contrário, tenho que parar a execução da função
+        if not os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.bin"):
+            GeraLog(False,"ERRO - Ocorreu falha ao renomear o Atualiza.bin")
+            return False
+
+        #Verificando se existe o Atualiza.ban. Caso contrário, tenho que parar a execução da função
+        if not os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.ban"):
+            GeraLog(False,"ERRO - Ocorreu falha ao renomear o Atualiza.ban")        
+            return False
+        '''
+        #Iniciando o Firebird
+        os.system('net start FirebirdServerTGCTRONC')
+
+        #Colhendo dados sobre o serviço do Firebird para testes
+        service = psutil.win_service_get('FirebirdServerTGCTRONC')
+        service = service.as_dict()
+
+        #Verificando se o serviço do Firebird foi iniciado. Caso contrário, tenho que parar a execução da função
+        if not (service and service['status'] == 'running'):
+            GeraLog(False, "ERRO - Ocorreu falha ao tentar iniciar o Firebird")
+            return False
+        
+        #Chamando o módulo TGC
+        os.startfile("C:\\Program Files (x86)\\Tron" + ModuloSis + ModuloSis + ".exe")
+
+        #Aguardando a abertura do módulo
+        time.sleep(10)
+
+        #Verificando se o módulo está aberto. Caso contrário, tenho que parar a execução da função
+        ModuloEstaRodando = False
+        
+        for p in psutil.process_iter(attrs=['pid', 'name']):
+            if p.info['name'] == (ModuloSis[1:] + ".exe"):
+                ModuloEstaRodando = True
+                break
+        if not ModuloEstaRodando:
+            GeraLog(False,"ERRO - O processo do módulo " + ModuloSis[1:] + ".exe não está em execução")
+            return False
+
+        #Restruturando o banco. O tempo limite de espera será de 10 minutos
+        #Caso tenha arquivo XML na pasta TRON, deu LOG de banco
+        TempoLimite = 0
+        DeuLog = False
+        
+        while os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.ban"):
+            time.sleep(1)
+            TempoLimite = TempoLimite + 1
+            if TempoLimite > 600 or DeuLog:
+                break          
+            fileList = glob.glob('C:\\Program Files (x86)\\tron\\*.xml')
+            for filePath in fileList:
+                DeuLog = True
+                break
+        
+        if TempoLimite > 600:
+            GeraLog(False,"ERRO - A estruturação do banco levou mais de 10 minutos.")
+            return False
+
+        if DeuLog:
+            GeraLog(False,"ATENCAO - Ocorreu LOG de banco após a restruturação. Acionar DBA.")
+        
+        #Verificando se o módulo está aberto, para poder fechá-lo
+        if not ExcluiProcesso(ModuloSis[1:]):
+            return False
+
+        #Iniciando o processo do Tron Integrador
+        if IniciaIntegrador:
+
+            #Chamando o Tron Integrador
+            os.startfile("C:\\Program Files (x86)\\Tron\\TronIntegrador\\Tron.Integrador.exe")
+
+            #Aguardando a abertura do Integrador
+            time.sleep(2)
+
+            #Pressionando Enter na mensagem apresentada
+            pyautogui.press('enter')
+
+            #Abrindo o menu configurações
+            pyautogui.hotkey('alt','c')
+
+            #Ativando o integrador, precionando a sequencia de teclas abaixo.
+            pyautogui.press(['a', 's', 'enter', 's', 'esc'])
+
+            #Iniciando o Tron Integrador
+            os.system('net start TronIntegradorSvc')
+
+            #Colhendo dados sobre o serviço do Firebird para testes
+            service = psutil.win_service_get('TronIntegradorSvc')
+            service = service.as_dict()
+
+            #Verificando, caso o serviço não esteja rodando, tenho que parar a execução da função
+            if not (service and service['status'] == 'running'):
+                GeraLog(False,"ERRO - Ocorreu falha ao iniciar o Tron Integrador")
+                return False
+
+        GeraLog(False, "Preparação do Ambiente finalizada")
+
+        #Chamando o módulo TGC
+        os.startfile("C:\\Program Files (x86)\\Tron" + ModuloSis + ModuloSis + ".exe")
+        time.sleep(20)
+
+        GeraLog(False, "Preparação de Ambiente realizada com sucesso.")
+        return True
+    except:
+        GeraLog(False, "Ocorreu um problema ao preparar o ambiente para teste")
+        sys.exit(1)
+
+def EscreverTexto(texto):
+    """
+    Criação: 14/10/2022 Última Revisão 14/10/2022 Último Autor: Johnathan
+    """
+    try:
+        #Escrevendo texto informado (OBS: Comando feito ativando as teclas)
+        pyautogui.typewrite(texto)
+        
+        GeraLog(False,"Foi informado o texto: " + texto)
+    except:
+        GeraLog(False, "Ocorreu um erro ao informar o texto: " + texto)
+        sys.exit(1)
+
+def EsperarTempo(tempoEmSegundos):
+    """
+    Criação: 14/10/2022 Última Revisão 14/10/2022 Último Autor: Johnathan
+    """
+    try:
+        #Esperando o tempo informado
+        time.sleep(tempoEmSegundos)
+        
+        GeraLog(False,"Esperou " + tempoEmSegundos + " Segundos")
+    except:
+        GeraLog(False, "Ocorreu um erro ao esperar tempo")
+        sys.exit(1)
+
+def PressionarTeclas(textoTeclas):
+    """
+    Criação: 14/10/2022 Última Revisão 14/10/2022 Último Autor: Johnathan
+    Exemplo(s) para variavel 'textoTeclas': "'enter','enter','enter'" ou só 'enter'
+    """
+    try:
+        pyautogui.press(textoTeclas)
+        
+        GeraLog(False,"Informou a sequência de teclas " + textoTeclas)
+    except:
+        GeraLog(False, "Ocorreu um erro ao informar a sequência de teclas " + textoTeclas)
+        sys.exit(1)
+
