@@ -17,3 +17,16 @@ def CalcularRescisao(TempoAbertura,TempoAberturaDaTela,CodigoEmpregado):
         GeraLog(False, "Concluído o método CalcularRescisão")
     except:
         GeraLog(False,'Ocorreu um erro no método CalcularRescisão')
+
+def AvisoLei12506(GeraAviso, ProjetaData):
+    try:
+        GeraLog(False, 'Selecionando o aviso 12506 na rescisão')
+        pyautogui.press('enter')
+        if GeraAviso == 'S':
+            pyautogui.press('enter')
+        else:
+            pyautogui.press(['left', 'enter'])
+        if GeraAviso == 'S' and ProjetaData == 'S':
+            pyautogui.press('right')
+    except:
+        GeraLog(False, 'Erro no aviso da lei 12506.')
