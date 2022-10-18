@@ -32,15 +32,16 @@ def EmissaoRelatorios(TempoEmissao):
         time.sleep(1)
         # clica na opção de imprimir para arquivo
         pyautogui.click( pyautogui.locateCenterOnScreen('C:\GitHub\Auto_TGC\Automacao\Framework\img\imprimirParaArquivo.png', confidence=0.9) )
-        time.sleep(20)
+        time.sleep(2)
         # clica no tipo de arquivo
-        GeraLog(False, 'Não chegou a clicar no tipo de arquivo')
+        #GeraLog(False, 'Não chegou a clicar no tipo de arquivo')
+        #pyautogui.press('tab')
         pyautogui.click( pyautogui.locateCenterOnScreen('C:\GitHub\Auto_TGC\Automacao\Framework\img\tipoArquivo.png', confidence=0.9) )
         GeraLog(False, 'clicou no tipo de arquivo')
         # escreve o tipo de arquivo a ser usado
-        GeraLog(False, 'Vai começar a digitar')
+        #GeraLog(False, 'Vai começar a digitar')
         pyautogui.typewrite('arquivo para')
-        GeraLog(False, 'digitou o arquivo')
+        #GeraLog(False, 'digitou o arquivo')
         # clica na geração do arquivo
         pyautogui.click( pyautogui.locateCenterOnScreen('C:\GitHub\Auto_TGC\Automacao\Framework\img\geracaoRelatorio.png', confidence=0.9) )
         time.sleep(TempoEmissao)

@@ -7,3 +7,24 @@ WARNING:root:18/10/2022, 17:02:15 - Falha na emissão do relatório.
 WARNING:root:18/10/2022, 17:02:56 - Iniciando emissão de relatórios e recibos
 WARNING:root:18/10/2022, 17:03:17 - Não chegou a clicar no tipo de arquivo
 WARNING:root:18/10/2022, 17:03:17 - Falha na emissão do relatório.
+WARNING:root:18/10/2022, 17:32:01 - Iniciando emissão de relatórios e recibos
+WARNING:root:18/10/2022, 17:32:05 - Não chegou a clicar no tipo de arquivo
+WARNING:root:18/10/2022, 17:32:05 - clicou no tipo de arquivo
+WARNING:root:18/10/2022, 17:32:05 - Vai começar a digitar
+WARNING:root:18/10/2022, 17:32:05 - digitou o arquivo
+WARNING:root:18/10/2022, 17:32:45 - Iniciando emissão de relatórios e recibos
+WARNING:root:18/10/2022, 17:32:48 - Não chegou a clicar no tipo de arquivo
+WARNING:root:18/10/2022, 17:32:48 - clicou no tipo de arquivo
+WARNING:root:18/10/2022, 17:32:48 - Vai começar a digitar
+WARNING:root:18/10/2022, 17:32:48 - digitou o arquivo
+WARNING:root:18/10/2022, 17:34:43 - Iniciando emissão de relatórios e recibos
+WARNING:root:18/10/2022, 17:37:41 - Iniciando emissão de relatórios e recibos
+WARNING:root:18/10/2022, 17:37:45 - Não chegou a clicar no tipo de arquivo
+WARNING:root:18/10/2022, 17:37:45 - Falha na emissão do relatório.
+WARNING:root:18/10/2022, 17:39:45 - Iniciando emissão de relatórios e recibos
+WARNING:root:18/10/2022, 17:39:49 - Não chegou a clicar no tipo de arquivo
+WARNING:root:18/10/2022, 17:39:54 - Falha na emissão do relatório.
+WARNING:root:18/10/2022, 17:44:18 - Iniciando emissão de relatórios e recibos
+WARNING:root:18/10/2022, 17:44:21 - Falha na emissão do relatório.
+WARNING:root:18/10/2022, 17:44:54 - Iniciando emissão de relatórios e recibos
+WARNING:root:18/10/2022, 17:44:58 - Falha na emissão do relatório.
