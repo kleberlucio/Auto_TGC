@@ -7,7 +7,7 @@ def CalcularRescisao(TempoAbertura,TempoAberturaDaTela,CodigoEmpregado):
         #Clica no meio da tela
         pyautogui.click(815, 291)
         #Acessa a opção de cálculo da rescisão
-        pyautogui.press(['alt','e','0','1'])
+        pyautogui.press(['alt','e','0', '1'])
         #Aguarda a abertura da opção
         time.sleep(TempoAbertura)
         pyautogui.press('insert')
@@ -27,6 +27,6 @@ def AvisoLei12506(GeraAviso, ProjetaData):
         else:
             pyautogui.press(['left', 'enter'])
         if GeraAviso == 'S' and ProjetaData == 'S':
-            pyautogui.press('right')
+            pyautogui.press('right', 'enter')
     except:
         GeraLog(False, 'Erro no aviso da lei 12506.')

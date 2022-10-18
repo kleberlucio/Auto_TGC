@@ -1,0 +1,24 @@
+WARNING:root:18/10/2022, 15:41:02 - Iniciando a preparação do ambiente para testar a tarefa 79489
+WARNING:root:18/10/2022, 15:41:28 - Iniciando a preparação do ambiente para testar a tarefa 79489
+WARNING:root:18/10/2022, 15:42:51 - Preparação do Ambiente finalizada
+WARNING:root:18/10/2022, 15:43:11 - Iniciado a Seleção da empresa
+WARNING:root:18/10/2022, 15:43:14 - Concluída a Seleção da empresa
+WARNING:root:18/10/2022, 15:43:14 - Iniciado a Seleção do período
+WARNING:root:18/10/2022, 15:43:15 - Concluído a Seleção do período
+WARNING:root:18/10/2022, 15:43:15 - Iniciado a verificação da empresa, mês e ano selecionado
+WARNING:root:18/10/2022, 15:43:15 - Finalizada a verificação da empresa, mês e ano selecionado
+WARNING:root:18/10/2022, 15:43:15 - Iniciando o cálculo de rescisão
+WARNING:root:18/10/2022, 15:43:31 - Concluído o método CalcularRescisão
+WARNING:root:18/10/2022, 15:43:31 - Erro...
+WARNING:root:18/10/2022, 15:48:48 - Iniciando a preparação do ambiente para testar a tarefa 79489
+WARNING:root:18/10/2022, 15:50:17 - Preparação do Ambiente finalizada
+WARNING:root:18/10/2022, 15:50:37 - Iniciado a Seleção da empresa
+WARNING:root:18/10/2022, 15:50:40 - Concluída a Seleção da empresa
+WARNING:root:18/10/2022, 15:50:40 - Iniciado a Seleção do período
+WARNING:root:18/10/2022, 15:50:41 - Concluído a Seleção do período
+WARNING:root:18/10/2022, 15:50:41 - Iniciado a verificação da empresa, mês e ano selecionado
+WARNING:root:18/10/2022, 15:50:41 - Finalizada a verificação da empresa, mês e ano selecionado
+WARNING:root:18/10/2022, 15:50:41 - Iniciando o cálculo de rescisão
+WARNING:root:18/10/2022, 15:50:57 - Concluído o método CalcularRescisão
+WARNING:root:18/10/2022, 15:50:57 - Selecionando o aviso 12506 na rescisão
+WARNING:root:18/10/2022, 15:50:57 - Erro...
