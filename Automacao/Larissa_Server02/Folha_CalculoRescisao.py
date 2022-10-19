@@ -35,12 +35,6 @@ def Redmine_79489():
 
 
 pyautogui.click(1248,8)
+time.sleep(2)
 EmissaoRelatorios(10)
-
-
 #Redmine_79489() 
-#pyautogui.click(1248,8)
-#time.sleep(2)
-#x, y = pyautogui.position()
-#print ("Posicao atual do mouse:")
-#print ("x = "+str(x)+" y = "+str(y))
