@@ -1,7 +1,9 @@
+from logging import PercentStyle
 from platform import python_branch
 from repository_comuns import *
+import pyperclip
 
-def CalcularRescisao(TempoAbertura,TempoAberturaDaTela,CodigoEmpregado):
+def InserirRescisao(TempoAbertura,TempoAberturaDaTela,CodigoEmpregado):
     try:
         GeraLog(False, "Iniciando o cálculo de rescisão")
         #Clica no meio da tela
@@ -26,10 +28,10 @@ def EmissaoRelatorios(TempoEmissao):
         if os.path.exists("C:\\Bancos\\report.prn"):
             GeraLog(False,"ERRO - Não foi possível excluir o arquivo Report.prn")
             return False
-        GeraLog(False, 'Iniciando emissão de relatórios e recibos')
+        GeraLog(False, 'Iniciando emissão de relatórios')
         # Clica no ícone da impressora
         pyautogui.click( pyautogui.locateCenterOnScreen('C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\img\\impressora.png', confidence=0.9) ) 
-        time.sleep(1)
+        time.sleep(2)
         # Clica na opção de imprimir para arquivo
         pyautogui.click( pyautogui.locateCenterOnScreen('C:\\GitHub\\Auto_TGC\\Automacao\\Framework\\img\\imprimirParaArquivo.png', confidence=0.9) )
         time.sleep(2)
@@ -57,9 +59,9 @@ def ModeloRescisao(TempoAbertura):
         pyautogui.hotkey('alt', 'M')
         pyperclip.copy("Rescisão Portaria n° 1057 I - Atual")
         pyautogui.hotkey("ctrl", "v")
-        pyautogui.press('enter')
-        pyautogui.press('F9')
-        pyautogui.press('S')
-        time.sleep(TempoAbertura)
+        PressionarTeclas('enter')
+        PressionarTeclas('F9')
+        PressionarTeclas('S')
+        EsperarTempo(TempoAbertura)
     except:
-        GeraLog(False, 'Erro na emissão rescisão')
+        GeraLog(False, 'Ocorreu um erro de excessão sobre a escolha do modelo de rescisão')
