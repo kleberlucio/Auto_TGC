@@ -14,6 +14,7 @@ import time
 import pyautogui
 import logging
 import sys
+import pyperclip
 
 def ExcluiProcesso(Processo):
     """
