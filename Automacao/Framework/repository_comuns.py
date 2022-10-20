@@ -549,7 +549,7 @@ def EsperarTempo(tempoEmSegundos):
         #Esperando o tempo informado
         time.sleep(tempoEmSegundos)
         
-        GeraLog(False,"Esperou " + tempoEmSegundos + " Segundos")
+        GeraLog(False,"Esperou " + str( tempoEmSegundos ) + " Segundos")
     except:
         GeraLog(False, "Ocorreu um erro ao esperar tempo")
         sys.exit(1)
