@@ -184,7 +184,7 @@ def SelecionaEmpresa(CodigoEmpresa,TelaCertificado,Modulo):
         if TelaCertificado:
             pyautogui.press('esc')
 
-        GeraLog(False,"Foi concluída a Seleção da empresa")
+        GeraLog(False, "Foi concluída a Seleção da empresa")
     except:
         GeraLog(False, "Ocorreu um erro de exceção no método SelecionaEmpresa")
         sys.exit(1)
@@ -420,7 +420,7 @@ def PreparaAmbiente(Redmine, IniciaIntegrador, ModuloSis):
         fileList = glob.glob('C:\\Program Files (x86)\\Tron\\*.rel')
         for filePath in fileList:
             os.rename(filePath,"C:\\Program Files (x86)\\Tron\\Atualiza.bin")
-        '''
+        #'''
         #Verificando se existe o Atualiza.bin. Caso contrário, tenho que parar a execução da função
         if not os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.bin"):
             GeraLog(False,"ERRO - Ocorreu falha ao renomear o Atualiza.bin")
@@ -430,7 +430,7 @@ def PreparaAmbiente(Redmine, IniciaIntegrador, ModuloSis):
         if not os.path.exists("C:\\Program Files (x86)\\Tron\Atualiza.ban"):
             GeraLog(False,"ERRO - Ocorreu falha ao renomear o Atualiza.ban")        
             return False
-        '''
+        #'''
         #Iniciando o Firebird
         os.system('net start FirebirdServerTGCTRONC')
 

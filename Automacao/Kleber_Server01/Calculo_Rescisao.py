@@ -27,7 +27,7 @@ def Redmine_105():
     except:
         GeraLog(False, "Interrompido os testes sobre o cenário 100000, verificar LOG acima")
         sys.exit(1)
-    GeraLog(False,"Terminado os teste da Folha")
+    GeraLog(False, "Terminado os teste da Folha")
     return True
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
