@@ -3,6 +3,7 @@
 from ast import Return
 from datetime import datetime
 from operator import truediv
+import sys
 from winreg import *
 import winreg
 import os
@@ -12,6 +13,7 @@ import glob
 import time
 import pyautogui
 import logging
+import pyperclip
 
 def ExcluiProcesso(Processo):
     """
@@ -118,9 +120,9 @@ def ComparaArquivo(Arq1,Arq2,ArqDif):
         #Cria o arquivo que vai demostrar as diferenças
         flog = open(ArqDif, "w")
         #Abre o arquivo que fica guardado
-        f1 = open(Arq1, "r", encoding ="utf8")  
+        f1 = open(Arq1, "r") #, encoding ="utf8")  
         #Abre o arquivo que foi gerado agora
-        f2 = open(Arq2, "r", encoding ="utf8")          
+        f2 = open(Arq2, "r")#, encoding ="utf8")          
         i = 0
         #Inicia a variável TemDif como falso. Ela dirá se tem diferença ou não
         TemDif = False
@@ -146,6 +148,7 @@ def ComparaArquivo(Arq1,Arq2,ArqDif):
             return False
     except:
         GeraLog(False, "Ocorreu um erro de exceção no método ComparaArquivo")
+        sys.exit(1)
     GeraLog(False,"Concluído a comparação de arquivos")
     return True
 
