@@ -556,14 +556,14 @@ def EsperarTempo(tempoEmSegundos):
 
 def PressionarTeclas(textoTeclas):
     """
-    Criação: 14/10/2022 Última Revisão 14/10/2022 Último Autor: Johnathan
-    Exemplo(s) para variavel 'textoTeclas': "'enter','enter','enter'" ou só 'enter'
+    Criação: 14/10/2022 Última Revisão 20/10/2022 Último Autor: Johnathan
+    Exemplo(s) para variavel 'textoTeclas': ['enter','enter','enter'] ou só 'enter'
     """
     try:
         pyautogui.press(textoTeclas)
         
-        GeraLog(False,"Informou a sequência de teclas " + textoTeclas)
+        GeraLog(False, "Informou a sequência de teclas " + str(textoTeclas))
     except:
-        GeraLog(False, "Ocorreu um erro ao informar a sequência de teclas " + textoTeclas)
+        GeraLog(False, "Ocorreu um erro ao informar a sequência de teclas " + str(textoTeclas))
         sys.exit(1)
 
