@@ -46,5 +46,5 @@ def Redmine_79489():
 
 
 
-pyautogui.click(1248,8)
-time.sleep(2)
+#pyautogui.click(1248,8)
+#time.sleep(2)
