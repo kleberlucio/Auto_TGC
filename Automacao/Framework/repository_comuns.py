@@ -211,8 +211,8 @@ def SelecionaPeriodo(AnoCriacaoScript,Mes,Ano,MensagemPendencia,TemPendencia):
         #Rotina para clicar no Ano a ser selecionado
         VoltaAno = ( (AnoCriacaoScript - Ano) )
         
-        if VoltaAno == 1:
-            VoltaAno = 0
+        #if VoltaAno == 1:
+            #VoltaAno = 0
         while VoltaAno > 0:
             pyautogui.click( pyautogui.locateCenterOnScreen('VoltaAno.png', confidence=0.9) )
             VoltaAno = VoltaAno - 1
