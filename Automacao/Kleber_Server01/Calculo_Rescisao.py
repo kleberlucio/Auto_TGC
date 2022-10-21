@@ -10,13 +10,9 @@ def Redmine_105():
         SelecionaEmpresa(13, True, 'Folha')        
         SelecionaPeriodo(2022, 10, 2022, False, True)      
         VerificaEmpresaPeriodoSelecionado('13','10','2022')
-        CalcularRescisao(3, 5, 171)
+        InserirRescisao(3, 5, 171)
         
-        #pyautogui.press(['enter','enter','enter'])
-        PressionarTeclas('enter')
-        PressionarTeclas('enter')
-        PressionarTeclas('enter')
-        
+        PressionarTeclas(['enter','enter','enter'])       
         EscreverTexto('05102022')
         PressionarTeclas('enter')
         EscreverTexto('05102022')
@@ -31,7 +27,7 @@ def Redmine_105():
     except:
         GeraLog(False, "Interrompido os testes sobre o cenário 100000, verificar LOG acima")
         sys.exit(1)
-    GeraLog(False,"Terminado os teste da Folha")
+    GeraLog(False, "Terminado os teste da Folha")
     return True
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
