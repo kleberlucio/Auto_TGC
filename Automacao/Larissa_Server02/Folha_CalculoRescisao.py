@@ -33,7 +33,7 @@ def Redmine_79489():
         EmissaoRelatorios(10)
         ComparaArquivo('C:\\GitHub\\Auto_TGC\\Automacao\\Larissa_Server02\\Arquivos_Folha\\79489\\Rescisão.prn', 
         'C:\\Bancos\\report.prn', 'C:\\GitHub\Auto_TGC\\Automacao\\Larissa_Server02\\Arquivos_Folha\\79489\\erroRescisão.txt')
-        pyautogui.press(['esc','S'])
+        PressionarTeclas(['esc','S'])
         EsperarTempo(3)
         EmissaoRelatorios(10)
         ComparaArquivo('C:\\GitHub\\Auto_TGC\\Automacao\\Larissa_Server02\\Arquivos_Folha\\79489\\TermoRescisão.prn', 
@@ -53,16 +53,16 @@ def Redmine_100279():
         EsperarTempo(2)
         # Marcando para não buscar a data do aviso
         PressionarTeclas('N')
-        PressionarTeclas('enter', presses=4)
+        PressionarTeclas(['enter', 'enter', 'enter', 'enter'])
         # Preenchendo a data da rescisão
         EscreverTexto('15022021')
         # Marcando para retirar os dias de afastamento 
         PressionarTeclas(['enter', 'S'])
         EscreverTexto('3')
         PressionarTeclas('enter')
-        EsperarTempo(5)
+        EsperarTempo(10)
         # Abrindo a tela do cálculo das férias
-        PressionarTeclas('alt', 'F')
+        pyautogui.hotkey("alt", "F")
         # Conferindo se o cálculo das férias está correto
         ExisteImagem('C:\\GitHub\\Auto_TGC\\Automacao\\Larissa_Server02\\Arquivos_Folha\\100279\\ferias.png')
         # Salvando a rescisão
@@ -79,7 +79,7 @@ def Redmine_100279():
         # Comparando o arquivo de rescisão
         ComparaArquivo('C:\\GitHub\\Auto_TGC\\Automacao\\Larissa_Server02\\Arquivos_Folha\\100279\\Rescisão.prn', 
         'C:\\Bancos\\report.prn', 'C:\\GitHub\Auto_TGC\\Automacao\\Larissa_Server02\\Arquivos_Folha\\100279\\erroRescisão.txt')
-        pyautogui.press(['esc','S'])
+        PressionarTeclas(['esc','S'])
         EsperarTempo(3)
         EmissaoRelatorios(10)
         # Comparando o termo de rescisão

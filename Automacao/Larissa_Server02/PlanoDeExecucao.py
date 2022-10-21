@@ -6,6 +6,7 @@ try:
     #   Rescisão
     #       Cálculo de Rescisão Normal/Complementar
     Redmine_79489()
+    Redmine_100279()
     GeraLog(False,"Concluída a execução das automações do servidor 02")
 except:
     GeraLog(False,"Ocorreu algum erro de excessão em relação a execução das automações")
